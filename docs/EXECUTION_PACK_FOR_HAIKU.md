@@ -38,8 +38,8 @@ zakat-calculator/
 
 1. ✅ Run `npx create-expo-app zakat-calculator -t tabs` and clean boilerplate
 2. ✅ Set up Expo Router with the 4 screens (index, results, reference/[id], about)
-3. Create `constants/theme.ts` with color palette and spacing
-4. **NEXT STOP — verify app runs on simulator, all screens navigate correctly**
+3. ✅ Create `constants/theme.ts` with color palette and spacing
+4. **STOP — verify app runs on simulator, all screens navigate correctly** ⏸️
 5. Build `AssetInput.tsx` component (label + AED input + validation)
 6. Build input form on `index.tsx` (cash, gold, silver, stocks, debt fields)
 7. Implement `lib/calculate.ts` per `docs/CALC_RULES.md` formula
