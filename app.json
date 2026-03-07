@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "zakat-calculator",
+    "name": "Zakat Calculator UAE",
     "slug": "zakat-calculator",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,9 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zakatcalculator.uae"
     },
     "android": {
+      "package": "com.zakatcalculator.uae",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -34,6 +36,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "574185ae-8851-4096-aa7d-da457042b965"
+      }
+    },
+    "owner": "sobaantahir97"
   }
 }

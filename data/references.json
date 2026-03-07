@@ -1,0 +1,66 @@
+{
+  "zakat-obligation": {
+    "title": "Zakat Obligation",
+    "description": "Zakat is a pillar of Islam and an obligation on all Muslims with wealth above the Nisab threshold.",
+    "quran": {
+      "surah": "Al-Baqarah",
+      "ayah": "2:267",
+      "arabic": "يَا أَيُّهَا الَّذِينَ آمَنُوا أَنفِقُوا مِن طَيِّبَاتِ مَا كَسَبْتُمْ وَمِمَّا أَخْرَجْنَا لَكُم مِّنَ الْأَرْضِ وَلَا تَيَمَّمُوا الْخَبِيثَ مِنْهُ تُنفِقُونَ",
+      "translation": "O you who believe! Spend of the good things which you have earned, and of that which We have produced for you from the earth."
+    },
+    "hadith": {
+      "text": "Islam is built upon five [pillars]: the testimony that none has the right to be worshipped except Allah and that Muhammad is the Messenger of Allah, establishing the prayer, paying the Zakat, fasting in Ramadan, and pilgrimage to the House.",
+      "source": "Sahih al-Bukhari 8",
+      "narrator": "Abdullah ibn Umar (may Allah be pleased with him)"
+    },
+    "explanation": "Zakat is one of the five pillars of Islam and is obligatory on all Muslims who possess wealth above the Nisab threshold."
+  },
+  "gold-silver": {
+    "title": "Gold & Silver",
+    "description": "Gold and silver are explicitly mentioned in Islamic sources as zakatable assets. Both personal and investment gold/silver are included.",
+    "quran": {
+      "surah": "At-Tawbah",
+      "ayah": "9:34",
+      "arabic": "وَالَّذِينَ يَكْنِزُونَ الذَّهَبَ وَالْفِضَّةَ وَلَا يُنفِقُونَهَا فِي سَبِيلِ اللَّهِ فَبَشِّرْهُم بِعَذَابٍ أَلِيمٍ",
+      "translation": "And those who hoard gold and silver and do not spend them in the way of Allah - inform them of a painful punishment."
+    },
+    "hadith": {
+      "text": "When five Awsuq (measurements) pass, Zakat becomes obligatory. If gold reaches twenty mithqal (approximately 85 grams), Zakat is due. If silver reaches two hundred dirham (approximately 595 grams), Zakat is due.",
+      "source": "Sunan Abu Dawud 1573",
+      "narrator": "Ali ibn Abi Talib (may Allah be pleased with him)"
+    },
+    "explanation": "The Nisab (minimum threshold) for gold is 85 grams and for silver is 595 grams. Once wealth reaches this threshold, 2.5% annual Zakat becomes due."
+  },
+  "cash": {
+    "title": "Cash & Bank Balances",
+    "description": "Cash and bank deposits are zakatable by analogy to precious metals and are treated as wealth in Islamic jurisprudence.",
+    "quran": {
+      "surah": "At-Tawbah",
+      "ayah": "9:34",
+      "arabic": "وَالَّذِينَ يَكْنِزُونَ الذَّهَبَ وَالْفِضَّةَ وَلَا يُنفِقُونَهَا فِي سَبِيلِ اللَّهِ فَبَشِّرْهُم بِعَذَابٍ أَلِيمٍ",
+      "translation": "And those who hoard gold and silver and do not spend them in the way of Allah - inform them of a painful punishment."
+    },
+    "hadith": {
+      "text": "Wealth and children are adornments of worldly life, but the everlasting good deeds are better in reward with your Lord and better in hope.",
+      "source": "Surah Al-Kahf 18:46",
+      "narrator": "General Islamic principle"
+    },
+    "explanation": "Cash and savings are treated as zakatable wealth. They are considered equivalent to precious metals in modern Islamic jurisprudence."
+  },
+  "stocks": {
+    "title": "Stocks & Investments",
+    "description": "Stocks and investments are zakatable based on their market value, as they represent ownership in wealth-producing assets.",
+    "quran": {
+      "surah": "Al-Baqarah",
+      "ayah": "2:267",
+      "arabic": "يَا أَيُّهَا الَّذِينَ آمَنُوا أَنفِقُوا مِن طَيِّبَاتِ مَا كَسَبْتُمْ وَمِمَّا أَخْرَجْنَا لَكُم مِّنَ الْأَرْضِ وَلَا تَيَمَّمُوا الْخَبِيثَ مِنْهُ تُنفِقُونَ",
+      "translation": "O you who believe! Spend of the good things which you have earned, and of that which We have produced for you from the earth."
+    },
+    "hadith": {
+      "text": "The best charity is when you are in a state of need, yet you still give. And the best giver is he who gives when he is in difficulty.",
+      "source": "Islamic jurisprudence principle",
+      "narrator": "General principle of wealth obligation"
+    },
+    "explanation": "Stocks held as investments are zakatable at their market value. This is based on the principle that ownership of wealth-producing assets makes them subject to Zakat."
+  }
+}

@@ -1,61 +1,106 @@
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, Pressable } from 'react-native';
+import { colors, spacing, typography, borderRadius } from '../constants/theme';
+import DisclaimerModal from '../components/DisclaimerModal';
+import InlineReferenceLink from '../components/InlineReferenceLink';
 
 export default function AboutScreen() {
+  const [disclaimerVisible, setDisclaimerVisible] = useState(false);
+
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>About This App</Text>
+    <>
+      <DisclaimerModal visible={disclaimerVisible} onDismiss={() => setDisclaimerVisible(false)} />
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>About This App</Text>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Disclaimer</Text>
-        <Text style={styles.sectionText}>
-          This app is a calculation tool only and does not constitute a religious
-          ruling (fatwa). Zakat obligations may vary based on individual
-          circumstances and scholarly interpretation. We recommend consulting a
-          qualified Islamic scholar for personal guidance.
-        </Text>
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Purpose</Text>
+          <Text style={styles.sectionText}>
+            Zakat Calculator UAE is a simple tool for estimating annual zakat obligations using the
+            standard 2.5% rule above nisab.
+          </Text>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Sources</Text>
-        <Text style={styles.sectionText}>
-          The developers have made every effort to use authentic, widely-accepted
-          sources (Quran and Sahih Hadith), but cannot guarantee completeness.
-          Use at your own discretion.
-        </Text>
-      </View>
+        <View style={styles.section}>
+          <View style={styles.sectionHeaderRow}>
+            <Text style={styles.sectionTitle}>How It Works</Text>
+            <InlineReferenceLink
+              referenceId="zakat-obligation"
+              accessibilityLabel="Open zakat obligation reference"
+            />
+          </View>
+          <Text style={styles.sectionText}>
+            Enter your cash, gold, silver, and investment holdings. The app compares total net
+            wealth against the nisab minimum and calculates zakat due at 2.5%.
+          </Text>
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Version</Text>
-        <Text style={styles.sectionText}>v1.0.0 • MVP Edition</Text>
-      </View>
-    </ScrollView>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Sources</Text>
+          <Text style={styles.sectionText}>
+            References are sourced from established Quran and hadith collections, and shown per
+            category for transparency.
+          </Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Version</Text>
+          <Text style={styles.sectionText}>v1.1.0</Text>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Pressable style={styles.disclaimerButton} onPress={() => setDisclaimerVisible(true)}>
+            <Text style={styles.disclaimerButtonText}>View Full Disclaimer</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    padding: spacing.lg,
+    backgroundColor: colors.background.main,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
-    marginBottom: 20,
+    fontSize: typography.fontSize['2xl'],
+    fontWeight: typography.fontWeight.bold,
+    color: colors.text.primary,
+    marginBottom: spacing.xl,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: spacing.xl,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 8,
+    fontSize: typography.fontSize.lg,
+    fontWeight: typography.fontWeight.semibold,
+    color: colors.primary.main,
+    marginBottom: spacing.sm,
   },
   sectionText: {
-    fontSize: 14,
-    color: '#555',
-    lineHeight: 22,
+    fontSize: typography.fontSize.base,
+    color: colors.text.secondary,
+    lineHeight: typography.lineHeight.relaxed,
+  },
+  buttonContainer: {
+    paddingVertical: spacing.xl,
+  },
+  disclaimerButton: {
+    backgroundColor: colors.secondary.main,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderRadius: borderRadius.md,
+    alignItems: 'center',
+  },
+  disclaimerButtonText: {
+    color: colors.text.light,
+    fontSize: typography.fontSize.base,
+    fontWeight: typography.fontWeight.semibold,
   },
 });

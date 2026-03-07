@@ -1,78 +1,63 @@
 /**
- * Theme constants for Zakat Calculator
- * Islamic-appropriate color palette with professional, trustworthy aesthetics
+ * Theme constants for Zakat Calculator.
+ * Warm-paper palette with high contrast and neutral surfaces.
  */
 
-// Color Palette
 export const colors = {
-  // Primary - Islamic blue, deep and trustworthy
   primary: {
-    main: '#1B5FA0',
-    light: '#2E7ABF',
-    dark: '#0F3B5C',
+    main: '#2B5D66',
+    light: '#4A7A82',
+    dark: '#1D3F46',
   },
 
-  // Secondary - Sea green, represents growth and prosperity
   secondary: {
-    main: '#2BA084',
-    light: '#4ECDC4',
-    dark: '#1A7A68',
+    main: '#8A6A45',
+    light: '#B28E64',
+    dark: '#6B4F33',
+    soft: '#E8DBC9',
   },
 
-  // Accent - Warm taupe, authentic and grounded
   accent: {
-    main: '#B8956A',
-    light: '#D4B8A0',
-    dark: '#8B6D47',
+    main: '#C58940',
+    light: '#DAA560',
+    dark: '#9F6D31',
   },
 
-  // Sage green - Calming secondary
-  sage: {
-    main: '#A8C5A5',
-    light: '#C4DBC0',
-    dark: '#7FA378',
-  },
-
-  // State colors
   state: {
-    success: '#27AE60',
-    error: '#E07856',
-    warning: '#F39C12',
-    info: '#3498DB',
+    success: '#2E7D32',
+    error: '#B54745',
+    warning: '#C47F00',
+    info: '#2F6FA9',
   },
 
-  // Text colors
   text: {
-    primary: '#2C3E50',
-    secondary: '#7F8C8D',
-    tertiary: '#BDC3C7',
-    light: '#ECF0F1',
+    primary: '#1F2933',
+    secondary: '#4D5B66',
+    tertiary: '#7B8794',
+    light: '#FFFFFF',
   },
 
-  // Background colors
   background: {
-    main: '#FFFFFF',
-    elevated: '#F8F7F2',
-    surface: '#ECF0F1',
+    main: '#F4F1EA',
+    elevated: '#FFFFFF',
+    surface: '#F8F5EF',
     dark: '#1A1A1A',
   },
 
-  // Neutral grays
   gray: {
-    50: '#F9FAFB',
-    100: '#F3F4F6',
-    200: '#E5E7EB',
-    300: '#D1D5DB',
-    400: '#9CA3AF',
-    500: '#6B7280',
-    600: '#4B5563',
-    700: '#374151',
-    800: '#1F2937',
-    900: '#111827',
+    50: '#F7F7F7',
+    100: '#F0F1F2',
+    200: '#D9DEE2',
+    300: '#BEC6CC',
+    400: '#9AA5AE',
+    500: '#7B8794',
+    600: '#616E7C',
+    700: '#52606D',
+    800: '#3E4C59',
+    900: '#323F4B',
   },
 };
 
-// Spacing scale (8px base unit)
 export const spacing = {
   xs: 4,
   sm: 8,
@@ -84,7 +69,6 @@ export const spacing = {
   '4xl': 64,
 };
 
-// Typography
 export const typography = {
   fontSize: {
     xs: 12,
@@ -103,9 +87,10 @@ export const typography = {
   },
 
   lineHeight: {
-    tight: 1.2,
-    normal: 1.5,
-    relaxed: 1.75,
+    // React Native expects absolute lineHeight values, not multipliers.
+    tight: 18,
+    normal: 22,
+    relaxed: 26,
   },
 
   fontFamily: {
@@ -114,7 +99,6 @@ export const typography = {
   },
 };
 
-// Border radius
 export const borderRadius = {
   sm: 4,
   md: 8,
@@ -123,32 +107,30 @@ export const borderRadius = {
   full: 9999,
 };
 
-// Shadows
 export const shadows = {
   sm: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 2,
     elevation: 2,
   },
   md: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 4,
   },
   lg: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.16,
+    shadowRadius: 12,
+    elevation: 8,
   },
 };
 
-// Complete theme object
 export const theme = {
   colors,
   spacing,
@@ -157,5 +139,4 @@ export const theme = {
   shadows,
 };
 
-// Theme type for TypeScript
 export type Theme = typeof theme;
