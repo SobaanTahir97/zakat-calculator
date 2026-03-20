@@ -5,17 +5,28 @@ import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FormProvider } from '../context/FormContext';
+import { LanguageProvider, useLanguage } from '../context/LanguageContext';
 import DisclaimerModal from '../components/DisclaimerModal';
 
 export {
-  // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 const DISCLAIMER_SEEN_KEY = 'zakat_disclaimer_seen';
+
+function AppStack() {
+  const { t } = useLanguage();
+  return (
+    <Stack>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="results" options={{ title: t('nav.zakatDue') }} />
+      <Stack.Screen name="reference/[id]" options={{ title: t('nav.reference') }} />
+      <Stack.Screen name="about" options={{ title: t('nav.about') }} />
+    </Stack>
+  );
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -24,17 +35,9 @@ export default function RootLayout() {
 
   const [disclaimerVisible, setDisclaimerVisible] = useState(false);
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      checkFirstLaunch();
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
 
   const checkFirstLaunch = async () => {
     try {
@@ -42,8 +45,8 @@ export default function RootLayout() {
       if (!hasSeenDisclaimer) {
         setDisclaimerVisible(true);
       }
-    } catch (error) {
-      console.error('Error checking first launch:', error);
+    } catch (e) {
+      console.error('Error checking first launch:', e);
     }
   };
 
@@ -51,8 +54,8 @@ export default function RootLayout() {
     try {
       await AsyncStorage.setItem(DISCLAIMER_SEEN_KEY, 'true');
       setDisclaimerVisible(false);
-    } catch (error) {
-      console.error('Error saving disclaimer state:', error);
+    } catch (e) {
+      console.error('Error saving disclaimer state:', e);
       setDisclaimerVisible(false);
     }
   };
@@ -62,17 +65,39 @@ export default function RootLayout() {
   }
 
   return (
+    <LanguageProvider>
+      <LayoutInner
+        disclaimerVisible={disclaimerVisible}
+        onDisclaimerDismiss={handleDisclaimerDismiss}
+        onReady={() => checkFirstLaunch()}
+      />
+    </LanguageProvider>
+  );
+}
+
+function LayoutInner({
+  disclaimerVisible,
+  onDisclaimerDismiss,
+  onReady,
+}: {
+  disclaimerVisible: boolean;
+  onDisclaimerDismiss: () => void;
+  onReady: () => void;
+}) {
+  const { languageLoaded } = useLanguage();
+
+  useEffect(() => {
+    if (languageLoaded) {
+      onReady();
+      SplashScreen.hideAsync();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- onReady is stable from parent, including it would cause infinite re-fire
+  }, [languageLoaded]);
+
+  return (
     <FormProvider>
-      <DisclaimerModal visible={disclaimerVisible} onDismiss={handleDisclaimerDismiss} />
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="results" options={{ title: 'Zakat Due' }} />
-        <Stack.Screen
-          name="reference/[id]"
-          options={{ title: 'Reference' }}
-        />
-        <Stack.Screen name="about" options={{ title: 'About' }} />
-      </Stack>
+      <DisclaimerModal visible={disclaimerVisible} onDismiss={onDisclaimerDismiss} />
+      <AppStack />
     </FormProvider>
   );
 }

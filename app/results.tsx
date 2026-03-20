@@ -4,53 +4,117 @@ import { Link } from 'expo-router';
 import BreakdownCard from '../components/BreakdownCard';
 import CurrencyAmount from '../components/CurrencyAmount';
 import { colors, spacing, typography, borderRadius } from '../constants/theme';
-import { calculateZakat, parseAmount } from '../lib/calculate';
+import { calculateZakat, parseAmount, formatAmount } from '../lib/calculate';
 import { useForm } from '../context/FormContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ResultsScreen() {
   const { form } = useForm();
+  const { t, textDir } = useLanguage();
 
   const result = useMemo(() => {
     const input = {
       cash: parseAmount(form.cash),
-      gold: parseAmount(form.gold),
-      silver: parseAmount(form.silver),
+      goldWeight: parseAmount(form.gold),
+      goldPricePerUnit: parseAmount(form.goldPricePerUnit),
+      silverWeight: parseAmount(form.silver),
+      silverPricePerUnit: parseAmount(form.silverPricePerUnit),
       stocks: parseAmount(form.stocks),
+      receivables: parseAmount(form.receivables),
       debt: parseAmount(form.debt),
       nisabType: form.nisabType,
-      pricePerGram: parseAmount(form.pricePerGram),
+      methodology: form.methodology,
+      weightUnit: form.weightUnit,
+      agriculturalProduce: parseAmount(form.agriculturalProduce),
+      irrigationType: form.irrigationType,
+      rentalIncome: parseAmount(form.rentalIncome),
+      professionalIncome: parseAmount(form.professionalIncome),
+      businessInventory: parseAmount(form.businessInventory),
+      deductDebts: form.deductDebts,
     };
     return calculateZakat(input);
-  }, [form]);
+  }, [
+    form.cash, form.gold, form.goldPricePerUnit,
+    form.silver, form.silverPricePerUnit,
+    form.stocks, form.receivables, form.debt,
+    form.nisabType, form.methodology, form.weightUnit,
+    form.agriculturalProduce, form.irrigationType, form.rentalIncome,
+    form.professionalIncome, form.businessInventory, form.deductDebts,
+  ]);
+
+  const currency = form.currency;
+  const weightLabel = form.weightUnit === 'tola' ? 'tola' : 'g';
+  const ghamidi = result.ghamidiBreakdown;
+  const headlineAmount = ghamidi ? ghamidi.totalCombined : result.zakatDue;
+
+
+  const ushrRate = form.irrigationType === 'rain-fed' ? '10%' : '5%';
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.resultHeader}>
-        <Text style={styles.label}>Zakat Due</Text>
+        <Text style={[styles.methodologyBadge, textDir]}>
+          {form.methodology === 'ghamidi'
+            ? t('results.ghamidiMethodology')
+            : form.methodology === 'contemporary'
+              ? t('results.contemporaryMethodology')
+              : t('results.standardMethodology')}
+        </Text>
+        <Text style={[styles.label, textDir]}>{ghamidi ? t('results.totalZakatUshrDue') : t('results.zakatDue')}</Text>
         <CurrencyAmount
-          amount={result.zakatDue}
+          amount={headlineAmount}
+          currency={currency}
           amountStyle={styles.zakatAmount}
           prefixSize={20}
           prefixColor={colors.text.light}
           containerStyle={styles.zakatAmountRow}
         />
 
-        {result.zakatable ? (
+        {ghamidi && (ghamidi.wealthZakat > 0 || ghamidi.agriculturalUshr > 0) && (
           <View style={styles.statusGroup}>
-            <Text style={styles.status}>Net wealth is above the nisab threshold.</Text>
             <View style={styles.statusAmountRow}>
-              <Text style={styles.statusLabel}>Net Wealth</Text>
+              <Text style={[styles.statusLabel, textDir]}>{t('results.wealthZakat')}</Text>
               <CurrencyAmount
-                amount={result.netWealth}
+                amount={ghamidi.wealthZakat}
+                currency={currency}
                 amountStyle={styles.statusAmount}
                 prefixSize={13}
                 prefixColor={colors.text.light}
               />
             </View>
             <View style={styles.statusAmountRow}>
-              <Text style={styles.statusLabel}>Nisab</Text>
+              <Text style={[styles.statusLabel, textDir]}>
+                {t('results.agriculturalUshr', { rate: ushrRate })}
+              </Text>
+              <CurrencyAmount
+                amount={ghamidi.agriculturalUshr}
+                currency={currency}
+                amountStyle={styles.statusAmount}
+                prefixSize={13}
+                prefixColor={colors.text.light}
+              />
+            </View>
+          </View>
+        )}
+
+        {result.zakatable ? (
+          <View style={styles.statusGroup}>
+            <Text style={[styles.status, textDir]}>{t('results.aboveNisab')}</Text>
+            <View style={styles.statusAmountRow}>
+              <Text style={[styles.statusLabel, textDir]}>{t('results.netWealth')}</Text>
+              <CurrencyAmount
+                amount={result.netWealth}
+                currency={currency}
+                amountStyle={styles.statusAmount}
+                prefixSize={13}
+                prefixColor={colors.text.light}
+              />
+            </View>
+            <View style={styles.statusAmountRow}>
+              <Text style={[styles.statusLabel, textDir]}>{t('results.nisab')}</Text>
               <CurrencyAmount
                 amount={result.nisabThreshold}
+                currency={currency}
                 amountStyle={styles.statusAmount}
                 prefixSize={13}
                 prefixColor={colors.text.light}
@@ -58,77 +122,173 @@ export default function ResultsScreen() {
             </View>
           </View>
         ) : (
-          <Text style={styles.status}>Wealth is below nisab threshold.</Text>
+          <Text style={[styles.status, textDir]}>
+            {ghamidi && ghamidi.agriculturalUshr > 0
+              ? t('results.belowNisabWithUshr')
+              : t('results.belowNisab')}
+          </Text>
         )}
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Wealth Summary</Text>
-        <BreakdownCard label="Total Assets" amount={result.totalWealthBeforeDebt} />
-        <BreakdownCard label="Total Debts" amount={parseAmount(form.debt)} />
-        <BreakdownCard label="Net Wealth" amount={result.netWealth} />
-        <BreakdownCard label="Nisab Threshold" amount={result.nisabThreshold} />
+        <Text style={[styles.sectionTitle, textDir]}>{t('results.wealthSummary')}</Text>
+        <BreakdownCard label={t('results.totalAssets')} amount={result.totalWealthBeforeDebt} currency={currency} />
+        {result.debtDeducted ? (
+          <BreakdownCard label={t('results.totalDebts')} amount={result.totalWealthBeforeDebt - result.netWealth} currency={currency} />
+        ) : (
+          <BreakdownCard label={t('results.totalDebtsShafii')} amount={parseAmount(form.debt)} currency={currency} />
+        )}
+        <BreakdownCard label={t('results.netWealth')} amount={result.netWealth} currency={currency} />
+        <BreakdownCard label={t('results.nisabThreshold')} amount={result.nisabThreshold} currency={currency} />
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Asset Breakdown</Text>
+        <Text style={[styles.sectionTitle, textDir]}>{t('results.assetBreakdown')}</Text>
         {result.breakdown.cash > 0 && (
           <BreakdownCard
-            label="Cash & Bank Balance"
+            label={t('results.cashBank')}
             amount={result.breakdown.cash}
             percentage={Math.round((result.breakdown.cash / result.totalWealthBeforeDebt) * 100)}
+            currency={currency}
           />
         )}
-        {result.breakdown.gold > 0 && (
+        {result.breakdown.goldValue > 0 && (
           <BreakdownCard
-            label="Gold Value"
-            amount={result.breakdown.gold}
-            percentage={Math.round((result.breakdown.gold / result.totalWealthBeforeDebt) * 100)}
+            label={t('results.gold', { weight: formatAmount(result.breakdown.goldWeight, currency).replace(/\.00$/, ''), unit: weightLabel })}
+            amount={result.breakdown.goldValue}
+            percentage={Math.round((result.breakdown.goldValue / result.totalWealthBeforeDebt) * 100)}
+            currency={currency}
           />
         )}
-        {result.breakdown.silver > 0 && (
+        {result.breakdown.silverValue > 0 && (
           <BreakdownCard
-            label="Silver Value"
-            amount={result.breakdown.silver}
-            percentage={Math.round((result.breakdown.silver / result.totalWealthBeforeDebt) * 100)}
+            label={t('results.silver', { weight: formatAmount(result.breakdown.silverWeight, currency).replace(/\.00$/, ''), unit: weightLabel })}
+            amount={result.breakdown.silverValue}
+            percentage={Math.round((result.breakdown.silverValue / result.totalWealthBeforeDebt) * 100)}
+            currency={currency}
           />
         )}
         {result.breakdown.stocks > 0 && (
           <BreakdownCard
-            label="Stocks & Investments"
+            label={t('results.stocksInvestments')}
             amount={result.breakdown.stocks}
             percentage={Math.round((result.breakdown.stocks / result.totalWealthBeforeDebt) * 100)}
+            currency={currency}
+          />
+        )}
+        {result.breakdown.receivables > 0 && (
+          <BreakdownCard
+            label={t('results.moneyOwed')}
+            amount={result.breakdown.receivables}
+            percentage={Math.round((result.breakdown.receivables / result.totalWealthBeforeDebt) * 100)}
+            currency={currency}
+          />
+        )}
+        {(result.breakdown.rentalIncome ?? 0) > 0 && (
+          <BreakdownCard
+            label={t('results.rentalIncome')}
+            amount={result.breakdown.rentalIncome!}
+            percentage={Math.round((result.breakdown.rentalIncome! / result.totalWealthBeforeDebt) * 100)}
+            currency={currency}
+          />
+        )}
+        {(result.breakdown.professionalIncome ?? 0) > 0 && (
+          <BreakdownCard
+            label={t('results.professionalIncome')}
+            amount={result.breakdown.professionalIncome!}
+            percentage={Math.round((result.breakdown.professionalIncome! / result.totalWealthBeforeDebt) * 100)}
+            currency={currency}
+          />
+        )}
+        {(result.breakdown.businessInventory ?? 0) > 0 && (
+          <BreakdownCard
+            label={t('results.businessInventory')}
+            amount={result.breakdown.businessInventory!}
+            percentage={Math.round((result.breakdown.businessInventory! / result.totalWealthBeforeDebt) * 100)}
+            currency={currency}
           />
         )}
       </View>
 
+      {ghamidi && ghamidi.agriculturalUshr > 0 && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, textDir]}>{t('results.agriculturalUshrSection')}</Text>
+          <BreakdownCard
+            label={t('results.produceValue')}
+            amount={ghamidi.agriculturalProduce}
+            currency={currency}
+          />
+          <BreakdownCard
+            label={t('results.ushrDue', { rate: ushrRate })}
+            amount={ghamidi.agriculturalUshr}
+            currency={currency}
+          />
+        </View>
+      )}
+
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>References</Text>
+        <Text style={[styles.sectionTitle, textDir]}>{t('results.references')}</Text>
         <Link href="/reference/zakat-obligation" asChild>
           <Pressable style={styles.refButton}>
-            <Text style={styles.refButtonText}>Zakat Obligation</Text>
+            <Text style={[styles.refButtonText, textDir]}>{t('results.zakatObligation')}</Text>
           </Pressable>
         </Link>
         <Link href="/reference/gold-silver" asChild>
           <Pressable style={styles.refButton}>
-            <Text style={styles.refButtonText}>Gold & Silver</Text>
+            <Text style={[styles.refButtonText, textDir]}>{t('results.goldSilver')}</Text>
           </Pressable>
         </Link>
         <Link href="/reference/cash" asChild>
           <Pressable style={styles.refButton}>
-            <Text style={styles.refButtonText}>Cash</Text>
+            <Text style={[styles.refButtonText, textDir]}>{t('results.cash')}</Text>
           </Pressable>
         </Link>
         <Link href="/reference/stocks" asChild>
           <Pressable style={styles.refButton}>
-            <Text style={styles.refButtonText}>Stocks & Investments</Text>
+            <Text style={[styles.refButtonText, textDir]}>{t('results.stocks')}</Text>
           </Pressable>
         </Link>
+        <Link href="/reference/receivables" asChild>
+          <Pressable style={styles.refButton}>
+            <Text style={[styles.refButtonText, textDir]}>{t('results.moneyOwedRef')}</Text>
+          </Pressable>
+        </Link>
+        <Link href="/reference/debt" asChild>
+          <Pressable style={styles.refButton}>
+            <Text style={[styles.refButtonText, textDir]}>{t('results.debtDeduction')}</Text>
+          </Pressable>
+        </Link>
+        <Link href="/reference/ghamidi" asChild>
+          <Pressable style={styles.refButton}>
+            <Text style={[styles.refButtonText, textDir]}>{t('results.scholarGhamidi')}</Text>
+          </Pressable>
+        </Link>
+        {form.methodology === 'ghamidi' && (
+          <>
+            <Link href="/reference/agricultural-produce" asChild>
+              <Pressable style={styles.refButton}>
+                <Text style={[styles.refButtonText, textDir]}>{t('results.agriculturalProduceRef')}</Text>
+              </Pressable>
+            </Link>
+            <Link href="/reference/rental-income" asChild>
+              <Pressable style={styles.refButton}>
+                <Text style={[styles.refButtonText, textDir]}>{t('results.rentalIncomeRef')}</Text>
+              </Pressable>
+            </Link>
+          </>
+        )}
+        {form.methodology === 'contemporary' && (
+          <Link href="/reference/contemporary-methodology" asChild>
+            <Pressable style={styles.refButton}>
+              <Text style={[styles.refButtonText, textDir]}>{t('results.contemporaryRef')}</Text>
+            </Pressable>
+          </Link>
+        )}
       </View>
 
       <Link href="/" asChild>
         <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Back to Calculator</Text>
+          <Text style={styles.buttonText}>{t('results.backToCalculator')}</Text>
         </Pressable>
       </Link>
     </ScrollView>
@@ -145,6 +305,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.xl,
     alignItems: 'center',
+  },
+  methodologyBadge: {
+    fontSize: typography.fontSize.xs,
+    color: colors.text.light,
+    opacity: 0.8,
+    marginBottom: spacing.xs,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    fontWeight: typography.fontWeight.medium,
   },
   label: {
     fontSize: typography.fontSize.base,

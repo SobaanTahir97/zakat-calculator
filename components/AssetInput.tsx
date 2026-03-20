@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { View, Text, TextInput, StyleSheet } from 'react-native';
 import { colors, spacing, typography, borderRadius } from '../constants/theme';
 import CurrencyPrefix from './CurrencyPrefix';
 import InlineReferenceLink from './InlineReferenceLink';
+import type { Currency } from '../lib/goldRate';
 
 interface AssetInputProps {
   label: string;
@@ -11,6 +12,8 @@ interface AssetInputProps {
   placeholder?: string;
   helperText?: string;
   error?: string;
+  currency?: Currency;
+  unitLabel?: string;
   referenceId?: string;
   referenceAccessibilityLabel?: string;
   noBottomMargin?: boolean;
@@ -23,6 +26,8 @@ export default function AssetInput({
   placeholder = '0',
   helperText,
   error,
+  currency = 'AED',
+  unitLabel,
   referenceId,
   referenceAccessibilityLabel,
   noBottomMargin = false,
@@ -30,13 +35,23 @@ export default function AssetInput({
   const [isFocused, setIsFocused] = useState(false);
 
   const handleChangeText = (text: string) => {
+    // Strip commas before sanitizing (commas are display-only).
+    const stripped = text.replace(/,/g, '');
     // Allow only digits and decimal point, no negative numbers.
-    const sanitized = text.replace(/[^0-9.]/g, '');
+    const sanitized = stripped.replace(/[^0-9.]/g, '');
     // Prevent multiple decimal points.
     const parts = sanitized.split('.');
     const validated = parts.length > 2 ? `${parts[0]}.${parts.slice(1).join('')}` : sanitized;
     onChangeText(validated);
   };
+
+  // Format the raw value with commas for display.
+  const displayValue = useMemo(() => {
+    if (!value) return '';
+    const parts = value.split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return parts.join('.');
+  }, [value]);
 
   return (
     <View style={[styles.container, noBottomMargin && styles.containerCompact]}>
@@ -62,13 +77,17 @@ export default function AssetInput({
           error && styles.inputWrapperError,
         ]}
       >
-        <CurrencyPrefix size={14} color={colors.text.primary} forceTextFallback={false} />
+        {unitLabel ? (
+          <Text style={styles.unitLabel}>{unitLabel}</Text>
+        ) : (
+          <CurrencyPrefix size={14} color={colors.text.primary} currency={currency} forceTextFallback={false} />
+        )}
         <TextInput
           style={styles.input}
           keyboardType="decimal-pad"
           placeholder={placeholder}
           placeholderTextColor={colors.text.tertiary}
-          value={value}
+          value={displayValue}
           onChangeText={handleChangeText}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
@@ -131,6 +150,12 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSize.base,
     color: colors.text.primary,
     fontWeight: typography.fontWeight.medium,
+  },
+  unitLabel: {
+    fontSize: typography.fontSize.base,
+    fontWeight: typography.fontWeight.medium,
+    color: colors.text.primary,
+    marginRight: spacing.xs,
   },
   helperText: {
     fontSize: typography.fontSize.sm,

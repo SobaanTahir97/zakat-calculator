@@ -1,5 +1,6 @@
 import { Modal, View, Text, ScrollView, StyleSheet, Pressable } from 'react-native';
 import { colors, spacing, typography, borderRadius } from '../constants/theme';
+import { useLanguage } from '../context/LanguageContext';
 
 interface DisclaimerModalProps {
   visible: boolean;
@@ -7,6 +8,9 @@ interface DisclaimerModalProps {
 }
 
 export default function DisclaimerModal({ visible, onDismiss }: DisclaimerModalProps) {
+  const { t, textDir } = useLanguage();
+
+
   return (
     <Modal visible={visible} animationType="fade" transparent={true} onRequestClose={onDismiss}>
       <View style={styles.overlay}>
@@ -16,44 +20,39 @@ export default function DisclaimerModal({ visible, onDismiss }: DisclaimerModalP
             contentContainerStyle={styles.contentContainer}
             showsVerticalScrollIndicator={true}
           >
-            <Text style={styles.title}>Important Disclaimer</Text>
+            <Text style={[styles.title, textDir]}>{t('disclaimer.title')}</Text>
 
             <View style={styles.sectionBlock}>
-              <Text style={styles.sectionTitle}>Religious Guidance</Text>
-              <Text style={styles.bodyText}>
-                This app is a calculation tool only and does not constitute a religious ruling
-                (fatwa). Zakat obligations may vary based on individual circumstances, scholarly
-                interpretation, and your specific madhab.
+              <Text style={[styles.sectionTitle, textDir]}>{t('disclaimer.religiousGuidance')}</Text>
+              <Text style={[styles.bodyText, textDir]}>
+                {t('disclaimer.religiousGuidanceText')}
               </Text>
             </View>
 
             <View style={styles.sectionBlock}>
-              <Text style={styles.sectionTitle}>Consult a Scholar</Text>
-              <Text style={styles.bodyText}>
-                Consult a qualified Islamic scholar before making financial decisions based on this
-                calculator.
+              <Text style={[styles.sectionTitle, textDir]}>{t('disclaimer.consultScholar')}</Text>
+              <Text style={[styles.bodyText, textDir]}>
+                {t('disclaimer.consultScholarText')}
               </Text>
             </View>
 
             <View style={styles.sectionBlock}>
-              <Text style={styles.sectionTitle}>Sourcing</Text>
-              <Text style={styles.bodyText}>
-                We aim to use authentic, widely accepted sources from Quran and hadith collections,
-                but cannot guarantee completeness in every scenario.
+              <Text style={[styles.sectionTitle, textDir]}>{t('disclaimer.sourcing')}</Text>
+              <Text style={[styles.bodyText, textDir]}>
+                {t('disclaimer.sourcingText')}
               </Text>
             </View>
 
             <View style={styles.sectionBlock}>
-              <Text style={styles.sectionTitle}>Liability</Text>
-              <Text style={styles.bodyText}>
-                Developers and app distributors are not liable for losses or claims from app usage.
-                Final zakat responsibility remains with the user.
+              <Text style={[styles.sectionTitle, textDir]}>{t('disclaimer.liability')}</Text>
+              <Text style={[styles.bodyText, textDir]}>
+                {t('disclaimer.liabilityText')}
               </Text>
             </View>
           </ScrollView>
 
           <Pressable style={styles.button} onPress={onDismiss}>
-            <Text style={styles.buttonText}>I Understand</Text>
+            <Text style={styles.buttonText}>{t('disclaimer.iUnderstand')}</Text>
           </Pressable>
         </View>
       </View>

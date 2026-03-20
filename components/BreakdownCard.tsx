@@ -2,17 +2,20 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors, spacing, typography, borderRadius } from '../constants/theme';
 import CurrencyAmount from './CurrencyAmount';
+import type { Currency } from '../lib/goldRate';
 
 interface BreakdownCardProps {
   label: string;
   amount: number;
   percentage?: number;
+  currency?: Currency;
 }
 
 export default function BreakdownCard({
   label,
   amount,
   percentage,
+  currency = 'AED',
 }: BreakdownCardProps) {
   return (
     <View style={styles.card}>
@@ -20,6 +23,7 @@ export default function BreakdownCard({
         <Text style={styles.label}>{label}</Text>
         <CurrencyAmount
           amount={amount}
+          currency={currency}
           amountStyle={styles.amount}
           prefixSize={14}
           prefixColor={colors.text.primary}

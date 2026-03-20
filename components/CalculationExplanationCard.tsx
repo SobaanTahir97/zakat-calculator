@@ -1,39 +1,100 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { borderRadius, colors, spacing, typography } from '../constants/theme';
 import InlineReferenceLink from './InlineReferenceLink';
+import { useLanguage } from '../context/LanguageContext';
+import type { Methodology } from '../lib/calculate';
 
-export default function CalculationExplanationCard() {
+interface Props {
+  methodology?: Methodology;
+  deductDebts?: boolean;
+}
+
+interface Step {
+  text: string;
+  source: string;
+}
+
+function getSteps(
+  methodology: Methodology,
+  deductDebts: boolean,
+  t: (key: string) => string,
+): Step[] {
+  const base: Step[] = [
+    { text: t('calculation.step1'), source: t('calculation.source1') },
+    {
+      text: deductDebts ? t('calculation.step2Deduct') : t('calculation.step2NoDeduct'),
+      source: deductDebts ? t('calculation.source2Deduct') : t('calculation.source2NoDeduct'),
+    },
+    { text: t('calculation.step3'), source: t('calculation.source3') },
+  ];
+
+  if (methodology === 'ghamidi') {
+    return [
+      ...base,
+      { text: t('calculation.step4Ghamidi'), source: t('calculation.source4Ghamidi') },
+      { text: t('calculation.step5Ghamidi'), source: t('calculation.source5Ghamidi') },
+    ];
+  }
+
+  if (methodology === 'contemporary') {
+    return [
+      ...base,
+      { text: t('calculation.step4Contemporary'), source: t('calculation.source4Contemporary') },
+      { text: t('calculation.step5Contemporary'), source: t('calculation.source5Contemporary') },
+    ];
+  }
+
+  return base;
+}
+
+export default function CalculationExplanationCard({ methodology = 'standard', deductDebts = true }: Props) {
   const [expanded, setExpanded] = useState(false);
+  const { t, textDir } = useLanguage();
+  const steps = useMemo(() => getSteps(methodology, deductDebts, t), [methodology, deductDebts, t]);
+
 
   return (
     <View style={styles.card}>
       <Pressable style={styles.header} onPress={() => setExpanded((prev) => !prev)}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>How Calculation Works</Text>
+          <Text style={[styles.title, textDir]}>{t('calculation.title')}</Text>
           <InlineReferenceLink
             referenceId="zakat-obligation"
             accessibilityLabel="Open zakat obligation reference"
           />
         </View>
-        <Text style={styles.chevron}>{expanded ? 'Hide' : 'Show'}</Text>
+        <Text style={styles.chevron}>{expanded ? t('calculation.hide') : t('calculation.show')}</Text>
       </Pressable>
 
       {expanded && (
         <View style={styles.content}>
-          <Text style={styles.step}>1. Add assets: cash, gold/silver, and investments.</Text>
-          <Text style={styles.step}>2. Subtract short-term debts due within 12 months.</Text>
-          <Text style={styles.step}>3. If net wealth is at or above nisab, zakat is 2.5%.</Text>
+          {steps.map((step, i) => (
+            <View key={i} style={styles.stepRow}>
+              <Text style={styles.step}>{step.text}</Text>
+              <Text style={styles.source}>{step.source}</Text>
+            </View>
+          ))}
 
           <View style={styles.formulaContainer}>
-            <Text style={styles.formula}>net_wealth = assets - short_term_debt</Text>
+            <Text style={styles.formula}>{deductDebts ? t('calculation.formulaNet') : t('calculation.formulaNetNoDebt')}</Text>
             <Text style={styles.formula}>
-              {'zakat_due = net_wealth * 0.025 (if net_wealth >= nisab)'}
+              {t('calculation.formulaZakat')}
             </Text>
+            {methodology === 'ghamidi' && (
+              <Text style={styles.formula}>
+                {t('calculation.formulaUshr')}
+              </Text>
+            )}
+            {methodology === 'contemporary' && (
+              <Text style={styles.formula}>
+                {t('calculation.formulaContemporary')}
+              </Text>
+            )}
           </View>
 
           <View style={styles.nisabRow}>
-            <Text style={styles.nisabText}>Nisab uses gold (85g) or silver (595g).</Text>
+            <Text style={[styles.nisabText, textDir]}>{t('calculation.nisabNote')}</Text>
             <InlineReferenceLink
               referenceId="gold-silver"
               accessibilityLabel="Open gold and silver nisab reference"
@@ -78,10 +139,20 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     gap: spacing.sm,
   },
+  stepRow: {
+    gap: 2,
+  },
   step: {
     color: colors.text.secondary,
     fontSize: typography.fontSize.sm,
     lineHeight: 20,
+  },
+  source: {
+    color: colors.text.light,
+    fontSize: typography.fontSize.xs,
+    fontStyle: 'italic',
+    lineHeight: 16,
+    paddingLeft: spacing.sm,
   },
   formulaContainer: {
     marginTop: spacing.sm,

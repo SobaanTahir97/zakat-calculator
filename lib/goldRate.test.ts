@@ -25,7 +25,8 @@ describe('goldRate adapter', () => {
     });
 
     expect(result).toEqual({
-      aedPerGram24k: 327.11,
+      pricePerGram24k: 327.11,
+      currency: 'AED',
       sourceLabel: 'Provider A',
       asOf: '2026-03-07T00:00:00.000Z',
     });
@@ -52,7 +53,8 @@ describe('goldRate adapter', () => {
 
     expect(result.sourceLabel).toBe('Spot feed');
     expect(result.asOf).toBe('2026-03-07T01:00:00.000Z');
-    expect(result.aedPerGram24k).toBeCloseTo(253.86, 2);
+    expect(result.currency).toBe('AED');
+    expect(result.pricePerGram24k).toBeCloseTo(253.86, 2);
   });
 
   it('parses gold-api payload shape using USD to AED conversion', async () => {
@@ -75,7 +77,30 @@ describe('goldRate adapter', () => {
 
     expect(result.sourceLabel).toBe('gold-api.com');
     expect(result.asOf).toBe('2026-03-07T12:13:32Z');
-    expect(result.aedPerGram24k).toBeCloseTo(610.91, 2);
+    expect(result.currency).toBe('AED');
+    expect(result.pricePerGram24k).toBeCloseTo(610.91, 2);
+  });
+
+  it('parses gold-api payload with PKR currency', async () => {
+    const result = await fetchGoldRate({
+      endpointUrl: 'https://example.test/rate',
+      fetcher: async () =>
+        ({
+          ok: true,
+          status: 200,
+          json: async () => ({
+            name: 'Gold',
+            symbol: 'XAU',
+            price: 2000,
+            updatedAt: '2026-03-07T12:00:00Z',
+          }),
+        } as unknown as Response),
+      currency: 'PKR',
+      forceRefresh: true,
+    });
+
+    expect(result.currency).toBe('PKR');
+    expect(result.pricePerGram24k).toBeGreaterThan(0);
   });
 
   it('works without API key and sends only Accept header', async () => {
@@ -98,7 +123,7 @@ describe('goldRate adapter', () => {
       forceRefresh: true,
     });
 
-    expect(result.aedPerGram24k).toBe(300);
+    expect(result.pricePerGram24k).toBe(300);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -183,7 +208,7 @@ describe('goldRate adapter', () => {
         now: () => now,
         minRequestIntervalMs: 10_000,
       })
-    ).rejects.toThrow('Gold rate request failed: 503');
+    ).rejects.toThrow('XAU rate request failed: 503');
 
     now = 3_000;
 
@@ -194,7 +219,7 @@ describe('goldRate adapter', () => {
         now: () => now,
         minRequestIntervalMs: 10_000,
       })
-    ).rejects.toThrow('Gold rate request throttled. Try again shortly.');
+    ).rejects.toThrow('XAU rate request throttled. Try again shortly.');
   });
 
   it('returns default env config when no vars are set', () => {
@@ -218,9 +243,8 @@ describe('goldRate adapter', () => {
   });
 
   it('exposes payload parser for direct validation', () => {
-    expect(() => __internal.parseGoldRatePayload({}, 3.6725)).toThrow(
-      'Gold rate payload is missing required values.'
+    expect(() => __internal.parseGoldRatePayload({}, 3.6725, 'AED')).toThrow(
+      'Metal rate payload is missing required values.'
     );
   });
 });
-

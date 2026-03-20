@@ -1,69 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import AssetInput from './AssetInput';
 import { colors, spacing, typography, borderRadius } from '../constants/theme';
 import InlineReferenceLink from './InlineReferenceLink';
+import { useLanguage } from '../context/LanguageContext';
+import type { WeightUnit } from '../lib/calculate';
 
 interface NisabSelectorProps {
   nisabType: 'gold' | 'silver';
-  pricePerGram: string;
-  goldRateStatus: 'idle' | 'loading' | 'ready' | 'error';
-  goldRateSource?: string;
-  goldRateUpdatedAt?: string;
+  weightUnit: WeightUnit;
   onToggleNisabType: () => void;
-  onPriceChange: (value: string) => void;
-}
-
-function formatAsOf(value?: string): string {
-  if (!value) {
-    return '';
-  }
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return '';
-  }
-
-  return date.toLocaleString('en-AE', {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  onToggleWeightUnit: () => void;
 }
 
 export default function NisabSelector({
   nisabType,
-  pricePerGram,
-  goldRateStatus,
-  goldRateSource,
-  goldRateUpdatedAt,
+  weightUnit,
   onToggleNisabType,
-  onPriceChange,
+  onToggleWeightUnit,
 }: NisabSelectorProps) {
-  const statusText =
-    goldRateStatus === 'loading'
-      ? 'Fetching live gold rate...'
-      : goldRateStatus === 'ready'
-      ? `Auto-filled from ${goldRateSource ?? 'spot proxy'}${
-          formatAsOf(goldRateUpdatedAt) ? ` (${formatAsOf(goldRateUpdatedAt)})` : ''
-        }`
-      : goldRateStatus === 'error'
-      ? 'Live rate unavailable. Enter price manually.'
-      : 'Enter the current local rate per gram.';
+  const { t, textDir } = useLanguage();
 
-  const statusColor =
-    goldRateStatus === 'ready'
-      ? colors.state.success
-      : goldRateStatus === 'error'
-      ? colors.state.warning
-      : colors.text.secondary;
+
+  const goldLabel = weightUnit === 'tola' ? t('nisab.goldTola') : t('nisab.goldGram');
+  const silverLabel = weightUnit === 'tola' ? t('nisab.silverTola') : t('nisab.silverGram');
 
   return (
     <View>
       <View style={styles.sectionTitleRow}>
-        <Text style={styles.sectionTitle}>Nisab Threshold</Text>
+        <Text style={[styles.sectionTitle, textDir]}>{t('nisab.title')}</Text>
         <InlineReferenceLink
           referenceId="gold-silver"
           accessibilityLabel="Open nisab and gold silver reference"
@@ -76,7 +40,7 @@ export default function NisabSelector({
           onPress={onToggleNisabType}
         >
           <Text style={[styles.nisabButtonText, nisabType === 'gold' && styles.nisabButtonTextActive]}>
-            Gold (85g)
+            {goldLabel}
           </Text>
         </Pressable>
         <Pressable
@@ -86,21 +50,29 @@ export default function NisabSelector({
           <Text
             style={[styles.nisabButtonText, nisabType === 'silver' && styles.nisabButtonTextActive]}
           >
-            Silver (595g)
+            {silverLabel}
           </Text>
         </Pressable>
       </View>
 
-      <AssetInput
-        label="Price per Gram"
-        value={pricePerGram}
-        onChangeText={onPriceChange}
-        placeholder="0"
-        helperText="Manual value is always allowed."
-        noBottomMargin={true}
-      />
-
-      <Text style={[styles.statusText, { color: statusColor }]}>{statusText}</Text>
+      <View style={styles.unitContainer}>
+        <Pressable
+          style={[styles.unitButton, weightUnit === 'gram' && styles.unitButtonActive]}
+          onPress={weightUnit !== 'gram' ? onToggleWeightUnit : undefined}
+        >
+          <Text style={[styles.unitButtonText, weightUnit === 'gram' && styles.unitButtonTextActive]}>
+            {t('nisab.gram')}
+          </Text>
+        </Pressable>
+        <Pressable
+          style={[styles.unitButton, weightUnit === 'tola' && styles.unitButtonActive]}
+          onPress={weightUnit !== 'tola' ? onToggleWeightUnit : undefined}
+        >
+          <Text style={[styles.unitButtonText, weightUnit === 'tola' && styles.unitButtonTextActive]}>
+            {t('nisab.tola')}
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -119,7 +91,7 @@ const styles = StyleSheet.create({
   nisabContainer: {
     flexDirection: 'row',
     gap: spacing.md,
-    marginBottom: spacing.md,
+    marginBottom: spacing.sm,
   },
   nisabButton: {
     flex: 1,
@@ -143,9 +115,30 @@ const styles = StyleSheet.create({
   nisabButtonTextActive: {
     color: colors.text.light,
   },
-  statusText: {
+  unitContainer: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  unitButton: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.gray[300],
+    borderRadius: borderRadius.md,
+    alignItems: 'center',
+    backgroundColor: colors.background.surface,
+  },
+  unitButtonActive: {
+    backgroundColor: colors.secondary.main,
+    borderColor: colors.secondary.dark,
+  },
+  unitButtonText: {
     fontSize: typography.fontSize.sm,
-    marginTop: spacing.xs,
-    marginBottom: 0,
+    fontWeight: typography.fontWeight.medium,
+    color: colors.text.primary,
+  },
+  unitButtonTextActive: {
+    color: colors.text.light,
   },
 });

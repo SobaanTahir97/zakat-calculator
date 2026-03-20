@@ -17,7 +17,7 @@
   },
   "gold-silver": {
     "title": "Gold & Silver",
-    "description": "Gold and silver are explicitly mentioned in Islamic sources as zakatable assets. Both personal and investment gold/silver are included.",
+    "description": "Gold and silver are explicitly mentioned in Islamic sources as zakatable assets.",
     "quran": {
       "surah": "At-Tawbah",
       "ayah": "9:34",
@@ -29,7 +29,7 @@
       "source": "Sunan Abu Dawud 1573",
       "narrator": "Ali ibn Abi Talib (may Allah be pleased with him)"
     },
-    "explanation": "The Nisab (minimum threshold) for gold is 85 grams and for silver is 595 grams. Once wealth reaches this threshold, 2.5% annual Zakat becomes due."
+    "explanation": "The Nisab (minimum threshold) for gold is 85 grams and for silver is 595 grams. Once wealth reaches this threshold, 2.5% annual Zakat becomes due.\n\nJewellery ruling: The Hanafi school holds that all gold and silver — including jewellery worn for personal use — is subject to zakat once it reaches the nisab. The Maliki, Shafi'i, and Hanbali schools hold that gold or silver jewellery worn regularly for personal use is exempt from zakat. Only investment gold, savings in gold form, or jewellery kept for wealth is zakatable under these three schools.\n\nTo follow the Hanafi position: include the full weight of all your gold and silver.\nTo follow the Maliki/Shafi'i/Hanbali position: enter only the gold and silver you hold as investment or savings — exclude jewellery you wear regularly."
   },
   "cash": {
     "title": "Cash & Bank Balances",
@@ -62,5 +62,101 @@
       "narrator": "General principle of wealth obligation"
     },
     "explanation": "Stocks held as investments are zakatable at their market value. This is based on the principle that ownership of wealth-producing assets makes them subject to Zakat."
+  },
+  "debt": {
+    "title": "Debt Deduction",
+    "description": "Short-term debts due within 12 months may be deducted from total wealth before calculating Zakat.",
+    "quran": {
+      "surah": "Al-Baqarah",
+      "ayah": "2:280",
+      "arabic": "وَإِن كَانَ ذُو عُسْرَةٍ فَنَظِرَةٌ إِلَىٰ مَيْسَرَةٍ وَأَن تَصَدَّقُوا خَيْرٌ لَّكُمْ إِن كُنتُمْ تَعْلَمُونَ",
+      "translation": "And if someone is in hardship, then let there be postponement until a time of ease. But if you give from your right as charity, then it is better for you, if you only knew."
+    },
+    "hadith": {
+      "text": "This is the month for paying your Zakat. Whoever has a debt, let him deduct it and pay Zakat on the remainder of his wealth.",
+      "source": "Muwatta Imam Malik, Kitab al-Zakat",
+      "narrator": "Uthman ibn Affan (may Allah be pleased with him), during his caliphate"
+    },
+    "explanation": "Debt deduction across the schools:\n\nHanafi, Maliki, and Hanbali schools: Short-term debts (due within 12 months) are deducted from zakatable wealth. This is the majority position and the default in this calculator.\n\nShafi'i school: Debt does not reduce zakatable wealth. The Shafi'i position holds that the zakat obligation attaches to a person's legal capacity (dhimma) — not to specific wealth — so debts are not deducted. This results in a higher zakat due compared to the other three schools.\n\nLong-term debts such as mortgages are generally not fully deductible under any school — only the portion due within the current year may be deducted."
+  },
+  "receivables": {
+    "title": "Money Owed to You",
+    "description": "Debts that others owe you and are expected to be repaid are generally considered part of your zakatable wealth.",
+    "quran": {
+      "surah": "Al-Baqarah",
+      "ayah": "2:282",
+      "arabic": "يَا أَيُّهَا الَّذِينَ آمَنُوا إِذَا تَدَايَنتُم بِدَيْنٍ إِلَىٰ أَجَلٍ مُّسَمًّى فَاكْتُبُوهُ",
+      "translation": "O you who believe! When you contract a debt for a specified term, write it down."
+    },
+    "hadith": {
+      "text": "If one has a debt owed to him by a person who acknowledges it and is expected to repay, then Zakat is due on it, as it is considered part of one's wealth.",
+      "source": "Derived from principles in Muwatta Imam Malik and Hanafi jurisprudence",
+      "narrator": "General scholarly consensus"
+    },
+    "explanation": "Money that others owe you (receivables) is generally zakatable if you reasonably expect it to be repaid. The Hanafi school distinguishes between 'strong debts' (trade-related, likely to be repaid) which are fully zakatable, and 'weak debts' (gifts, uncertain loans) which are zakatable only upon collection. This calculator treats receivables as debts you expect to collect."
+  },
+  "ghamidi": {
+    "title": "Scholar's Perspective: Javed Ahmad Ghamidi",
+    "description": "Ghamidi's methodology derives zakat rulings directly from the Quran and authenticated Sunnah, offering a distinctive scholarly perspective.",
+    "quran": {
+      "surah": "At-Tawbah",
+      "ayah": "9:103",
+      "arabic": "خُذْ مِنْ أَمْوَالِهِمْ صَدَقَةً تُطَهِّرُهُمْ وَتُزَكِّيهِم بِهَا وَصَلِّ عَلَيْهِمْ إِنَّ صَلَاتَكَ سَكَنٌ لَّهُمْ",
+      "translation": "Take from their wealth a charity by which you purify them and cause them increase, and invoke blessings upon them. Indeed, your invocations are reassurance for them."
+    },
+    "hadith": {
+      "text": "The Prophet (peace be upon him) sent Muadh ibn Jabal to Yemen and instructed him: 'Inform them that Allah has made Zakat obligatory on their wealth — it is to be taken from the rich among them and given to the poor among them.'",
+      "source": "Sahih al-Bukhari 1496",
+      "narrator": "Abdullah ibn Abbas (may Allah be pleased with him)"
+    },
+    "explanation": "Javed Ahmad Ghamidi's approach to zakat is rooted in his broader methodology of deriving Islamic law primarily from the Quran and authenticated Sunnah, rather than relying on later juristic consensus alone. For cash, gold, silver, and stocks — the categories in this calculator — Ghamidi agrees with the standard rate of 2.5%. His distinctive contributions include: (1) extending zakat to agricultural produce at 5% for irrigated and 10% for rain-fed crops, (2) including rental income from property as zakatable wealth, (3) emphasizing that zakat is a right of the poor in the wealth of the rich, not merely a voluntary act of charity. His methodology differs in derivation and scope rather than in the rate applied to monetary and precious metal wealth."
+  },
+  "agricultural-produce": {
+    "title": "Agricultural Produce (Ushr)",
+    "description": "Ushr is a form of zakat on agricultural produce, calculated at 5% for irrigated crops and 10% for rain-fed crops.",
+    "quran": {
+      "surah": "Al-An'am",
+      "ayah": "6:141",
+      "arabic": "وَآتُوا حَقَّهُ يَوْمَ حَصَادِهِ",
+      "translation": "And give its due [zakat] on the day of its harvest."
+    },
+    "hadith": {
+      "text": "On that which is watered by rain, rivers, or springs, or draws from its own roots, one-tenth is due. On that which is watered by irrigation, one-twentieth is due.",
+      "source": "Sahih al-Bukhari 1483",
+      "narrator": "Abdullah ibn Umar (may Allah be pleased with him)"
+    },
+    "explanation": "Ushr (one-tenth) is the zakat on agricultural produce. Ghamidi holds that ushr is a distinct obligation from wealth zakat. Rain-fed crops (no irrigation cost) are taxed at 10%, while irrigated crops (farmer bears irrigation cost) are taxed at 5%. Unlike wealth zakat, ushr has no nisab threshold — it is due on the harvest itself regardless of the farmer's total wealth. The value is based on the market price of the produce at the time of harvest."
+  },
+  "contemporary-methodology": {
+    "title": "Contemporary Methodology: Yusuf al-Qaradawi",
+    "description": "Qaradawi's ijtihad extends zakat to modern income sources beyond the classical eight categories, using maqasid al-shariah reasoning.",
+    "quran": {
+      "surah": "Al-Baqarah",
+      "ayah": "2:267",
+      "arabic": "يَا أَيُّهَا الَّذِينَ آمَنُوا أَنفِقُوا مِن طَيِّبَاتِ مَا كَسَبْتُمْ",
+      "translation": "O you who believe! Spend of the good things which you have earned."
+    },
+    "hadith": {
+      "text": "The Prophet (peace be upon him) sent Muadh ibn Jabal to Yemen and instructed him: 'Inform them that Allah has made Zakat obligatory on their wealth — it is to be taken from the rich among them and given to the poor among them.'",
+      "source": "Sahih al-Bukhari 1496",
+      "narrator": "Abdullah ibn Abbas (may Allah be pleased with him)"
+    },
+    "explanation": "Yusuf al-Qaradawi (1926–2022), one of the most influential contemporary Islamic scholars, argued in his seminal work Fiqh al-Zakah that zakat must be extended to all modern forms of wealth that generate income — not only the eight classical categories.\n\nKey principles of his methodology:\n\n1. Professional income (salary, self-employment): Zakatable when received and above the nisab threshold. Qaradawi rejected the requirement of a full lunar year (haul) for income zakat, reasoning that income is like agricultural produce — it should be taxed when earned, not hoarded for a year first.\n\n2. Business inventory (trade goods): Zakatable at 2.5% of current market selling value — this is actually consensus across all four classical schools (urood al-tijarah), which Qaradawi affirmed and extended.\n\n3. Broader wealth definition: Qaradawi held that 'every wealth that develops or has the potential to develop' is subject to zakat, guided by the objectives of Islamic law (maqasid al-shariah) — ensuring the poor have a share in the wealth of the rich.\n\nThis methodology is widely adopted by Islamic finance organizations in North America and Europe, including the Fiqh Council of North America (FCNA)."
+  },
+  "rental-income": {
+    "title": "Rental Income from Property",
+    "description": "Under Ghamidi's methodology, rental income from property is considered zakatable wealth.",
+    "quran": {
+      "surah": "Al-Baqarah",
+      "ayah": "2:267",
+      "arabic": "يَا أَيُّهَا الَّذِينَ آمَنُوا أَنفِقُوا مِن طَيِّبَاتِ مَا كَسَبْتُمْ",
+      "translation": "O you who believe! Spend of the good things which you have earned."
+    },
+    "hadith": {
+      "text": "Inform them that Allah has made Zakat obligatory on their wealth — it is to be taken from the rich among them and given to the poor among them.",
+      "source": "Sahih al-Bukhari 1496",
+      "narrator": "Abdullah ibn Abbas (may Allah be pleased with him)"
+    },
+    "explanation": "Ghamidi considers rental income as zakatable wealth, included in the total wealth pool at the standard 2.5% rate. The four major schools generally do not require zakat directly on rental income — only on accumulated savings from it. Ghamidi's broader interpretation, derived from the Quranic instruction to spend from what you earn, includes all income-producing assets. Do not double-count: if rental income is already included in your cash savings, do not enter it separately."
   }
 }

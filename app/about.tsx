@@ -3,54 +3,54 @@ import { View, Text, ScrollView, StyleSheet, Pressable } from 'react-native';
 import { colors, spacing, typography, borderRadius } from '../constants/theme';
 import DisclaimerModal from '../components/DisclaimerModal';
 import InlineReferenceLink from '../components/InlineReferenceLink';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function AboutScreen() {
   const [disclaimerVisible, setDisclaimerVisible] = useState(false);
+  const { t, textDir } = useLanguage();
+
 
   return (
     <>
       <DisclaimerModal visible={disclaimerVisible} onDismiss={() => setDisclaimerVisible(false)} />
       <ScrollView style={styles.container}>
-        <Text style={styles.title}>About This App</Text>
+        <Text style={[styles.title, textDir]}>{t('about.title')}</Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Purpose</Text>
-          <Text style={styles.sectionText}>
-            Zakat Calculator UAE is a simple tool for estimating annual zakat obligations using the
-            standard 2.5% rule above nisab.
+          <Text style={[styles.sectionTitle, textDir]}>{t('about.purpose')}</Text>
+          <Text style={[styles.sectionText, textDir]}>
+            {t('about.purposeText')}
           </Text>
         </View>
 
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionTitle}>How It Works</Text>
+            <Text style={[styles.sectionTitle, textDir]}>{t('about.howItWorks')}</Text>
             <InlineReferenceLink
               referenceId="zakat-obligation"
               accessibilityLabel="Open zakat obligation reference"
             />
           </View>
-          <Text style={styles.sectionText}>
-            Enter your cash, gold, silver, and investment holdings. The app compares total net
-            wealth against the nisab minimum and calculates zakat due at 2.5%.
+          <Text style={[styles.sectionText, textDir]}>
+            {t('about.howItWorksText')}
           </Text>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Sources</Text>
-          <Text style={styles.sectionText}>
-            References are sourced from established Quran and hadith collections, and shown per
-            category for transparency.
+          <Text style={[styles.sectionTitle, textDir]}>{t('about.sources')}</Text>
+          <Text style={[styles.sectionText, textDir]}>
+            {t('about.sourcesText')}
           </Text>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Version</Text>
+          <Text style={[styles.sectionTitle, textDir]}>{t('about.version')}</Text>
           <Text style={styles.sectionText}>v1.1.0</Text>
         </View>
 
         <View style={styles.buttonContainer}>
           <Pressable style={styles.disclaimerButton} onPress={() => setDisclaimerVisible(true)}>
-            <Text style={styles.disclaimerButtonText}>View Full Disclaimer</Text>
+            <Text style={styles.disclaimerButtonText}>{t('about.viewDisclaimer')}</Text>
           </Pressable>
         </View>
       </ScrollView>

@@ -10,9 +10,11 @@ import {
 import { formatAmount } from '../lib/calculate';
 import { colors, spacing, typography } from '../constants/theme';
 import CurrencyPrefix from './CurrencyPrefix';
+import type { Currency } from '../lib/goldRate';
 
 interface CurrencyAmountProps {
   amount: number;
+  currency?: Currency;
   amountStyle?: StyleProp<TextStyle>;
   prefixSize?: number;
   prefixColor?: string;
@@ -23,6 +25,7 @@ interface CurrencyAmountProps {
 
 export default function CurrencyAmount({
   amount,
+  currency = 'AED',
   amountStyle,
   prefixSize = 16,
   prefixColor = colors.text.primary,
@@ -35,10 +38,11 @@ export default function CurrencyAmount({
       <CurrencyPrefix
         size={prefixSize}
         color={prefixColor}
+        currency={currency}
         fallbackText={fallbackText}
         forceTextFallback={forceTextFallback}
       />
-      <Text style={[styles.amountText, amountStyle]}>{formatAmount(amount)}</Text>
+      <Text style={[styles.amountText, amountStyle]}>{formatAmount(amount, currency)}</Text>
     </View>
   );
 }

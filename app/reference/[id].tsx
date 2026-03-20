@@ -2,7 +2,11 @@ import React, { useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { colors, spacing, typography, borderRadius } from '../../constants/theme';
-import references from '../../data/references.json';
+import { useLanguage } from '../../context/LanguageContext';
+import referencesEn from '../../data/references.json';
+import referencesAr from '../../data/references.ar.json';
+import referencesUr from '../../data/references.ur.json';
+import type { Language } from '../../i18n';
 
 interface Reference {
   title: string;
@@ -21,21 +25,30 @@ interface Reference {
   explanation: string;
 }
 
+const referencesByLanguage: Record<Language, typeof referencesEn> = {
+  en: referencesEn,
+  ar: referencesAr,
+  ur: referencesUr,
+};
+
 export default function ReferenceScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { t, textDir, language } = useLanguage();
+
 
   const reference = useMemo(() => {
-    if (!id || !references[id as keyof typeof references]) {
+    const refs = referencesByLanguage[language] ?? referencesEn;
+    if (!id || !refs[id as keyof typeof refs]) {
       return null;
     }
-    return references[id as keyof typeof references] as Reference;
-  }, [id]);
+    return refs[id as keyof typeof refs] as Reference;
+  }, [id, language]);
 
   if (!reference) {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Reference not found</Text>
+          <Text style={[styles.errorText, textDir]}>{t('reference.notFound')}</Text>
         </View>
       </ScrollView>
     );
@@ -49,7 +62,7 @@ export default function ReferenceScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Quran</Text>
+        <Text style={[styles.sectionTitle, textDir]}>{t('reference.quran')}</Text>
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.reference}>
@@ -63,25 +76,25 @@ export default function ReferenceScreen() {
 
           <View style={styles.translationContainer}>
             <Text style={styles.translationText}>
-              "{reference.quran.translation}"
+              &ldquo;{reference.quran.translation}&rdquo;
             </Text>
           </View>
         </View>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Hadith</Text>
+        <Text style={[styles.sectionTitle, textDir]}>{t('reference.hadith')}</Text>
         <View style={styles.card}>
           <View style={styles.hadithContent}>
             <Text style={styles.hadithText}>{reference.hadith.text}</Text>
 
             <View style={styles.hadithMeta}>
-              <Text style={styles.metaLabel}>Source:</Text>
+              <Text style={[styles.metaLabel, textDir]}>{t('reference.source')}</Text>
               <Text style={styles.metaValue}>{reference.hadith.source}</Text>
             </View>
 
             <View style={styles.hadithMeta}>
-              <Text style={styles.metaLabel}>Narrator:</Text>
+              <Text style={[styles.metaLabel, textDir]}>{t('reference.narrator')}</Text>
               <Text style={styles.metaValue}>{reference.hadith.narrator}</Text>
             </View>
           </View>
@@ -89,17 +102,15 @@ export default function ReferenceScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Explanation</Text>
+        <Text style={[styles.sectionTitle, textDir]}>{t('reference.explanation')}</Text>
         <View style={styles.card}>
           <Text style={styles.explanationText}>{reference.explanation}</Text>
         </View>
       </View>
 
       <View style={styles.disclaimer}>
-        <Text style={styles.disclaimerText}>
-          This reference is provided for educational purposes. For personal
-          guidance on zakat obligations, please consult with a qualified Islamic
-          scholar.
+        <Text style={[styles.disclaimerText, textDir]}>
+          {t('reference.disclaimerText')}
         </Text>
       </View>
     </ScrollView>
