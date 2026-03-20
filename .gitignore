@@ -20,6 +20,9 @@ dist/
 build/
 .eas/
 
+# Test
+coverage/
+
 # Logs
 *.log
 npm-debug.log*

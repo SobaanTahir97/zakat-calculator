@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'expo-router';
 import { Pressable, StyleSheet, Text, type StyleProp, type ViewStyle } from 'react-native';
-import { borderRadius, colors, spacing, typography } from '../constants/theme';
+import { colors, spacing, typography } from '../constants/theme';
 
 interface InlineReferenceLinkProps {
   referenceId: string;
