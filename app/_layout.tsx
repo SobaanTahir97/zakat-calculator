@@ -1,12 +1,13 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FormProvider } from '../context/FormContext';
 import { LanguageProvider, useLanguage } from '../context/LanguageContext';
 import DisclaimerModal from '../components/DisclaimerModal';
+import AnimatedSplash from '../components/AnimatedSplash';
 
 export {
   ErrorBoundary,
@@ -85,19 +86,28 @@ function LayoutInner({
   onReady: () => void;
 }) {
   const { languageLoaded } = useLanguage();
+  const [showAnimatedSplash, setShowAnimatedSplash] = useState(false);
 
   useEffect(() => {
     if (languageLoaded) {
       onReady();
-      SplashScreen.hideAsync();
+      // Mount animated splash, then hide native splash on next frame
+      // so the animated overlay is visible before the native one disappears
+      setShowAnimatedSplash(true);
+      requestAnimationFrame(() => SplashScreen.hideAsync());
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps -- onReady is stable from parent, including it would cause infinite re-fire
   }, [languageLoaded]);
+
+  const handleAnimatedSplashFinish = useCallback(() => {
+    setShowAnimatedSplash(false);
+  }, []);
 
   return (
     <FormProvider>
       <DisclaimerModal visible={disclaimerVisible} onDismiss={onDisclaimerDismiss} />
       <AppStack />
+      {showAnimatedSplash && <AnimatedSplash onFinish={handleAnimatedSplashFinish} />}
     </FormProvider>
   );
 }

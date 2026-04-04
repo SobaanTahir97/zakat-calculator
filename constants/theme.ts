@@ -42,6 +42,7 @@ export const colors = {
     elevated: '#FFFFFF',
     surface: '#F8F5EF',
     dark: '#1A1A1A',
+    splash: '#0A2E31',
   },
 
   gray: {
