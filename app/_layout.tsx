@@ -90,10 +90,8 @@ function LayoutInner({
 
   useEffect(() => {
     if (languageLoaded) {
-      onReady();
       setShowAnimatedSplash(true);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- onReady is stable from parent, including it would cause infinite re-fire
   }, [languageLoaded]);
 
   const handleSplashReady = useCallback(() => {
@@ -102,6 +100,8 @@ function LayoutInner({
 
   const handleAnimatedSplashFinish = useCallback(() => {
     setShowAnimatedSplash(false);
+    onReady();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- onReady is stable from parent
   }, []);
 
   return (
