@@ -115,7 +115,7 @@ const en = {
     title: 'About This App',
     purpose: 'Purpose',
     purposeText:
-      'Zakat Calculator UAE is a simple tool for estimating annual zakat obligations using the standard 2.5% rule above nisab.',
+      'Zakat Calculator is a simple tool for estimating annual zakat obligations using the standard 2.5% rule above nisab.',
     howItWorks: 'How It Works',
     howItWorksText:
       'Enter your cash, gold, silver, and investment holdings. The app compares total net wealth against the nisab minimum and calculates zakat due at 2.5%.',

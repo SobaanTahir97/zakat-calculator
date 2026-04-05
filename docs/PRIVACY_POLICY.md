@@ -1,11 +1,11 @@
 # Privacy Policy
 
-**Zakat Calculator UAE**
+**Zakat Calculator**
 Last updated: March 20, 2026
 
 ## Overview
 
-Zakat Calculator UAE ("the App") is a free mobile application that helps users calculate Zakat obligations according to multiple Islamic scholarly methodologies. This privacy policy explains how the App handles your data.
+Zakat Calculator ("the App") is a free mobile application that helps users calculate Zakat obligations according to multiple Islamic scholarly methodologies. This privacy policy explains how the App handles your data.
 
 ## Data Collection
 

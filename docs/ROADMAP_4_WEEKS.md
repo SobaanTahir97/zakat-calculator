@@ -1,4 +1,4 @@
-# 4-Week Roadmap — Zakat Calculator UAE
+# 4-Week Roadmap — Zakat Calculator
 
 ## Prerequisites (Day 0)
 

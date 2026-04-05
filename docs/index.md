@@ -1,8 +1,8 @@
 ---
 layout: default
-title: Zakat Calculator UAE
+title: Zakat Calculator
 ---
 
-# Zakat Calculator UAE
+# Zakat Calculator
 
 - [Privacy Policy](PRIVACY_POLICY)

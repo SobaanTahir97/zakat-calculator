@@ -1,4 +1,4 @@
-# PRD — Zakat Calculator UAE v1
+# PRD — Zakat Calculator v1
 
 ## Overview
 
@@ -37,7 +37,7 @@ UAE-resident Muslim (25–45), salaried or with savings, wants a quick annual Za
 
 ## App Store Positioning (UAE)
 
-- **Title**: "Zakat Calculator UAE — Simple & Sourced"
+- **Title**: "Zakat Calculator — Simple & Sourced"
 - **Keywords**: zakat, calculator, UAE, AED, Islamic finance, Ramadan
 - **Category**: Finance (primary), Reference (secondary)
 - *Assumption: "Finance" category has better discoverability than "Lifestyle" for UAE users*
