@@ -8,8 +8,8 @@
     "scheme": "zakatcalculator",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash-icon.png",
-      "resizeMode": "cover",
+      "image": "./assets/images/icon.png",
+      "resizeMode": "contain",
       "backgroundColor": "#0A2E31"
     },
     "ios": {
