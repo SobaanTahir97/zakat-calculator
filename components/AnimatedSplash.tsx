@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Image, StyleSheet, useWindowDimensions } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -13,16 +13,25 @@ import { borderRadius } from '../constants/theme';
 
 interface AnimatedSplashProps {
   onFinish: () => void;
+  onReady?: () => void;
 }
 
-export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
+export default function AnimatedSplash({ onFinish, onReady }: AnimatedSplashProps) {
   const { width } = useWindowDimensions();
   const logoSize = width * 0.35;
+  const readyFired = useRef(false);
 
   const logoScale = useSharedValue(1);
   const logoOpacity = useSharedValue(1);
   const logoRotation = useSharedValue(0);
   const containerOpacity = useSharedValue(1);
+
+  const handleBackgroundLoad = useCallback(() => {
+    if (!readyFired.current) {
+      readyFired.current = true;
+      onReady?.();
+    }
+  }, [onReady]);
 
   useEffect(() => {
     // Logo starts at full size (matching native splash), does a subtle pulse
@@ -62,6 +71,7 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
         source={require('../assets/images/splash-icon.png')}
         style={styles.background}
         resizeMode="cover"
+        onLoad={handleBackgroundLoad}
       />
       <Animated.View style={[styles.logoContainer, logoStyle]}>
         <Image

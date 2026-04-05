@@ -91,13 +91,14 @@ function LayoutInner({
   useEffect(() => {
     if (languageLoaded) {
       onReady();
-      // Mount animated splash, then hide native splash on next frame
-      // so the animated overlay is visible before the native one disappears
       setShowAnimatedSplash(true);
-      requestAnimationFrame(() => SplashScreen.hideAsync());
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps -- onReady is stable from parent, including it would cause infinite re-fire
   }, [languageLoaded]);
+
+  const handleSplashReady = useCallback(() => {
+    SplashScreen.hideAsync();
+  }, []);
 
   const handleAnimatedSplashFinish = useCallback(() => {
     setShowAnimatedSplash(false);
@@ -107,7 +108,7 @@ function LayoutInner({
     <FormProvider>
       <DisclaimerModal visible={disclaimerVisible} onDismiss={onDisclaimerDismiss} />
       <AppStack />
-      {showAnimatedSplash && <AnimatedSplash onFinish={handleAnimatedSplashFinish} />}
+      {showAnimatedSplash && <AnimatedSplash onFinish={handleAnimatedSplashFinish} onReady={handleSplashReady} />}
     </FormProvider>
   );
 }
