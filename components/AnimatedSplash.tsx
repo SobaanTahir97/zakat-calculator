@@ -19,23 +19,24 @@ export default function AnimatedSplash({ onFinish }: AnimatedSplashProps) {
   const { width } = useWindowDimensions();
   const logoSize = width * 0.35;
 
-  const logoScale = useSharedValue(0.3);
-  const logoOpacity = useSharedValue(0);
-  const logoRotation = useSharedValue(-90);
+  const logoScale = useSharedValue(1);
+  const logoOpacity = useSharedValue(1);
+  const logoRotation = useSharedValue(0);
   const containerOpacity = useSharedValue(1);
 
   useEffect(() => {
-    // Logo fades and scales in with rotation
-    logoOpacity.value = withTiming(1, { duration: 600, easing: Easing.out(Easing.cubic) });
-    logoScale.value = withSequence(
-      withTiming(1.1, { duration: 700, easing: Easing.out(Easing.cubic) }),
-      withTiming(1, { duration: 200, easing: Easing.inOut(Easing.cubic) }),
+    // Logo starts at full size (matching native splash), does a subtle pulse
+    logoScale.value = withDelay(
+      300,
+      withSequence(
+        withTiming(1.08, { duration: 400, easing: Easing.out(Easing.cubic) }),
+        withTiming(1, { duration: 250, easing: Easing.inOut(Easing.cubic) }),
+      ),
     );
-    logoRotation.value = withTiming(0, { duration: 700, easing: Easing.out(Easing.cubic) });
 
-    // After logo settles, fade out the whole splash
+    // After pulse settles, fade out the whole splash
     containerOpacity.value = withDelay(
-      1200,
+      1000,
       withTiming(0, { duration: 400, easing: Easing.in(Easing.cubic) }, () => {
         runOnJS(onFinish)();
       }),

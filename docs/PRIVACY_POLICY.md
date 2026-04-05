@@ -5,7 +5,7 @@ Last updated: March 20, 2026
 
 ## Overview
 
-Zakat Calculator ("the App") is a free mobile application that helps users calculate Zakat obligations according to multiple Islamic scholarly methodologies. This privacy policy explains how the App handles your data.
+Zakat Calculator ("the App") is a mobile application available as a one-time purchase that helps users calculate Zakat obligations according to multiple Islamic scholarly methodologies. This privacy policy explains how the App handles your data.
 
 ## Data Collection
 
@@ -28,9 +28,11 @@ The App makes network requests to the following external service:
 
 - **gold-api.com** — to fetch live gold and silver prices for Nisab calculation. These requests contain only the metal symbol (e.g., XAU, XAG) and currency code (e.g., AED, PKR). No personal data, device identifiers, or user information is included in these requests.
 
-## Over-the-Air Updates
+## App Distribution and Updates
 
-The App uses Expo Updates to deliver updates. This service may process standard technical information (such as your device's IP address) to deliver updates. No personal data is collected through this process.
+The App is distributed through Google Play and may be available on other app stores in the future. These platforms handle app delivery and updates according to their own privacy policies.
+
+Additionally, the App uses Expo Updates to deliver minor updates directly. This service may process standard technical information (such as your device's IP address) to deliver updates. No personal data is collected through this process.
 
 ## Third-Party Services
 
@@ -52,4 +54,4 @@ We may update this privacy policy from time to time. Any changes will be reflect
 
 If you have any questions about this privacy policy, please contact us at:
 
-**Email:** sobaantahir97@gmail.com
+**Email:** sobaanstack@gmail.com

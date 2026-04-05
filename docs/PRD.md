@@ -2,7 +2,7 @@
 
 ## Overview
 
-A simple, trustworthy Zakat calculator for Muslims in the UAE. Users enter their assets (cash, gold/silver, stocks), subtract eligible debts, and receive a clear breakdown of Zakat owed in AED — with references to Quran and Hadith for each rule. English-only MVP; free app; no account required.
+A simple, trustworthy Zakat calculator for Muslims in the UAE. Users enter their assets (cash, gold/silver, stocks), subtract eligible debts, and receive a clear breakdown of Zakat owed in AED — with references to Quran and Hadith for each rule. English-only MVP; one-time purchase app; no account required.
 
 ## MVP In
 

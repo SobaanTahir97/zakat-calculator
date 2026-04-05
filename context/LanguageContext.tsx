@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import { I18nManager, TextStyle } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Updates from 'expo-updates';
 import { t as translate, isRTLLanguage, LANGUAGE_OPTIONS, type Language } from '../i18n';
 
 const LANGUAGE_KEY = 'zakat_app_language';
@@ -37,13 +38,16 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
     });
   }, []);
 
-  const setLanguage = useCallback((lang: Language) => {
+  const setLanguage = useCallback(async (lang: Language) => {
+    // Persist first so the reloaded app picks up the new language
+    await AsyncStorage.setItem(LANGUAGE_KEY, lang);
     setLanguageState(lang);
-    AsyncStorage.setItem(LANGUAGE_KEY, lang);
 
     const shouldBeRTL = isRTLLanguage(lang);
     if (I18nManager.isRTL !== shouldBeRTL) {
+      I18nManager.allowRTL(true);
       I18nManager.forceRTL(shouldBeRTL);
+      Updates.reloadAsync();
     }
   }, []);
 
