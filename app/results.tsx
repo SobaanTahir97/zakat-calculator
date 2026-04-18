@@ -5,6 +5,7 @@ import BreakdownCard from '../components/BreakdownCard';
 import CurrencyAmount from '../components/CurrencyAmount';
 import { colors, spacing, typography, borderRadius } from '../constants/theme';
 import { calculateZakat, parseAmount, formatAmount } from '../lib/calculate';
+import { tabletContainerStyle } from '../lib/responsive';
 import { useForm } from '../context/FormContext';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -52,6 +53,7 @@ export default function ResultsScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      <View style={tabletContainerStyle}>
       <View style={styles.resultHeader}>
         <Text style={[styles.methodologyBadge, textDir]}>
           {form.methodology === 'ghamidi'
@@ -291,6 +293,7 @@ export default function ResultsScreen() {
           <Text style={styles.buttonText}>{t('results.backToCalculator')}</Text>
         </Pressable>
       </Link>
+      </View>
     </ScrollView>
   );
 }

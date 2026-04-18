@@ -13,6 +13,7 @@ import { useForm } from '../context/FormContext';
 import { useLanguage } from '../context/LanguageContext';
 import { parseAmount, formatAmount, metalValue } from '../lib/calculate';
 import type { Currency, RateStatus } from '../lib/goldRate';
+import { tabletContainerStyle } from '../lib/responsive';
 
 function formatAsOf(value?: string): string {
   if (!value) return '';
@@ -52,7 +53,7 @@ function rateStatusColor(status: RateStatus): string {
 }
 
 export default function HomeScreen() {
-  const { form, updateField } = useForm();
+  const { form, updateField, refreshMetalRates } = useForm();
   const { t, textDir } = useLanguage();
   const insets = useSafeAreaInsets();
 
@@ -76,12 +77,26 @@ export default function HomeScreen() {
   const unitLabel = form.weightUnit === 'tola' ? 'Tola' : 'Gram';
 
   // Compute gold/silver values for display (respects tola→gram conversion)
-  const goldValue = metalValue(parseAmount(form.gold), parseAmount(form.goldPricePerUnit), form.weightUnit);
-  const silverValue = metalValue(parseAmount(form.silver), parseAmount(form.silverPricePerUnit), form.weightUnit);
+  const goldWeight = parseAmount(form.gold);
+  const silverWeight = parseAmount(form.silver);
+  const goldValue = metalValue(goldWeight, parseAmount(form.goldPricePerUnit), form.weightUnit);
+  const silverValue = metalValue(silverWeight, parseAmount(form.silverPricePerUnit), form.weightUnit);
+
+  const hasAnyAssetEntered =
+    parseAmount(form.cash) > 0 ||
+    goldWeight > 0 ||
+    silverWeight > 0 ||
+    parseAmount(form.stocks) > 0 ||
+    parseAmount(form.receivables) > 0 ||
+    (form.methodology === 'ghamidi' &&
+      (parseAmount(form.agriculturalProduce) > 0 || parseAmount(form.rentalIncome) > 0)) ||
+    (form.methodology === 'contemporary' &&
+      (parseAmount(form.professionalIncome) > 0 || parseAmount(form.businessInventory) > 0));
 
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      <View style={tabletContainerStyle}>
       <View
         style={[
           styles.header,
@@ -137,6 +152,11 @@ export default function HomeScreen() {
         <Text style={[styles.methodologyDescription, textDir]}>
           {t(`home.${form.methodology}Desc`)}
         </Text>
+        {form.methodology !== 'standard' && (
+          <Text style={[styles.methodologyHint, textDir]}>
+            {form.methodology === 'ghamidi' ? t('home.ghamidiHint') : t('home.contemporaryHint')}
+          </Text>
+        )}
         <View style={styles.nisabInMethodology}>
           <NisabSelector
             nisabType={form.nisabType}
@@ -183,9 +203,19 @@ export default function HomeScreen() {
           currency={form.currency}
           noBottomMargin={true}
         />
-        <Text style={[styles.rateStatus, { color: rateStatusColor(form.goldRateStatus) }, textDir]}>
-          {rateStatusTextTranslated(form.goldRateStatus, t, form.goldRateSource, form.goldRateUpdatedAt, unitLabel.toLowerCase())}
-        </Text>
+        <View style={styles.rateStatusRow}>
+          <Text style={[styles.rateStatus, { color: rateStatusColor(form.goldRateStatus) }, textDir]}>
+            {rateStatusTextTranslated(form.goldRateStatus, t, form.goldRateSource, form.goldRateUpdatedAt, unitLabel.toLowerCase())}
+          </Text>
+          {form.goldRateStatus === 'error' && (
+            <Pressable style={styles.retryButton} onPress={refreshMetalRates} accessibilityRole="button">
+              <Text style={styles.retryButtonText}>{t('home.retryRate')}</Text>
+            </Pressable>
+          )}
+        </View>
+        {form.goldRateStatus === 'error' && (
+          <Text style={[styles.rateActionHint, textDir]}>{t('home.rateUnavailableAction')}</Text>
+        )}
 
         {/* Silver section */}
         <AssetInput
@@ -210,9 +240,19 @@ export default function HomeScreen() {
           currency={form.currency}
           noBottomMargin={true}
         />
-        <Text style={[styles.rateStatus, { color: rateStatusColor(form.silverRateStatus) }, textDir]}>
-          {rateStatusTextTranslated(form.silverRateStatus, t, form.silverRateSource, form.silverRateUpdatedAt, unitLabel.toLowerCase())}
-        </Text>
+        <View style={styles.rateStatusRow}>
+          <Text style={[styles.rateStatus, { color: rateStatusColor(form.silverRateStatus) }, textDir]}>
+            {rateStatusTextTranslated(form.silverRateStatus, t, form.silverRateSource, form.silverRateUpdatedAt, unitLabel.toLowerCase())}
+          </Text>
+          {form.silverRateStatus === 'error' && (
+            <Pressable style={styles.retryButton} onPress={refreshMetalRates} accessibilityRole="button">
+              <Text style={styles.retryButtonText}>{t('home.retryRate')}</Text>
+            </Pressable>
+          )}
+        </View>
+        {form.silverRateStatus === 'error' && (
+          <Text style={[styles.rateActionHint, textDir]}>{t('home.rateUnavailableAction')}</Text>
+        )}
 
         <AssetInput
           label={t('home.stocksLabel')}
@@ -355,17 +395,32 @@ export default function HomeScreen() {
         )}
       </View>
 
-      <Link href="/results" asChild>
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>{t('home.calculateZakat')}</Text>
-        </Pressable>
-      </Link>
+      {hasAnyAssetEntered ? (
+        <Link href="/results" asChild>
+          <Pressable style={styles.button}>
+            <Text style={styles.buttonText}>{t('home.calculateZakat')}</Text>
+          </Pressable>
+        </Link>
+      ) : (
+        <>
+          <Pressable
+            style={StyleSheet.flatten([styles.button, styles.buttonDisabled])}
+            disabled={true}
+            accessibilityRole="button"
+            accessibilityState={{ disabled: true }}
+          >
+            <Text style={styles.buttonText}>{t('home.calculateZakat')}</Text>
+          </Pressable>
+          <Text style={[styles.emptyStateHint, textDir]}>{t('home.enterAssetFirst')}</Text>
+        </>
+      )}
 
       <Link href="/about" asChild>
         <Pressable style={StyleSheet.flatten([styles.button, styles.secondaryButton])}>
           <Text style={styles.secondaryButtonText}>{t('home.aboutDisclaimer')}</Text>
         </Pressable>
       </Link>
+      </View>
     </ScrollView>
   );
 }
@@ -450,6 +505,12 @@ const styles = StyleSheet.create({
     fontSize: typography.fontSize.sm,
     color: colors.text.secondary,
   },
+  methodologyHint: {
+    fontSize: typography.fontSize.sm,
+    color: colors.primary.main,
+    fontWeight: typography.fontWeight.medium,
+    marginTop: spacing.xs,
+  },
   nisabInMethodology: {
     marginTop: spacing.md,
   },
@@ -466,6 +527,33 @@ const styles = StyleSheet.create({
   rateStatus: {
     fontSize: typography.fontSize.sm,
     marginTop: spacing.xs,
+    marginBottom: spacing.md,
+    flex: 1,
+  },
+  rateStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+  },
+  retryButton: {
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.md,
+    borderWidth: 1,
+    borderColor: colors.primary.main,
+    borderRadius: borderRadius.sm,
+    backgroundColor: colors.background.surface,
+    marginBottom: spacing.md,
+  },
+  retryButtonText: {
+    fontSize: typography.fontSize.sm,
+    color: colors.primary.main,
+    fontWeight: typography.fontWeight.semibold,
+  },
+  rateActionHint: {
+    fontSize: typography.fontSize.sm,
+    color: colors.text.primary,
+    fontWeight: typography.fontWeight.medium,
+    marginTop: -spacing.sm,
     marginBottom: spacing.md,
   },
   shafiiToggle: {
@@ -536,5 +624,17 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     fontSize: typography.fontSize.base,
     fontWeight: typography.fontWeight.semibold,
+  },
+  buttonDisabled: {
+    backgroundColor: colors.gray[400],
+    opacity: 0.7,
+  },
+  emptyStateHint: {
+    fontSize: typography.fontSize.sm,
+    color: colors.text.secondary,
+    textAlign: 'center',
+    marginHorizontal: spacing.lg,
+    marginTop: -spacing.xs,
+    marginBottom: spacing.sm,
   },
 });

@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { colors, spacing, typography, borderRadius } from '../../constants/theme';
+import { tabletContainerStyle } from '../../lib/responsive';
 import { useLanguage } from '../../context/LanguageContext';
 import referencesEn from '../../data/references.json';
 import referencesAr from '../../data/references.ar.json';
@@ -47,8 +48,10 @@ export default function ReferenceScreen() {
   if (!reference) {
     return (
       <ScrollView style={styles.container}>
-        <View style={styles.errorContainer}>
-          <Text style={[styles.errorText, textDir]}>{t('reference.notFound')}</Text>
+        <View style={tabletContainerStyle}>
+          <View style={styles.errorContainer}>
+            <Text style={[styles.errorText, textDir]}>{t('reference.notFound')}</Text>
+          </View>
         </View>
       </ScrollView>
     );
@@ -56,6 +59,7 @@ export default function ReferenceScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      <View style={tabletContainerStyle}>
       <View style={styles.header}>
         <Text style={styles.title}>{reference.title}</Text>
         <Text style={styles.description}>{reference.description}</Text>
@@ -112,6 +116,7 @@ export default function ReferenceScreen() {
         <Text style={[styles.disclaimerText, textDir]}>
           {t('reference.disclaimerText')}
         </Text>
+      </View>
       </View>
     </ScrollView>
   );

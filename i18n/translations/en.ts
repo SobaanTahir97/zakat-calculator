@@ -50,15 +50,22 @@ const en = {
     deductions: 'Deductions',
     debtLabel: 'Short-term Debts',
     debtHelper: 'Due within 12 months',
-    doNotDeductDebts: 'Do not deduct debts',
-    shafiiNote: 'Sh\u0101fi\u02bf\u012b school \u2014 debt does not reduce zakatable wealth',
+    doNotDeductDebts: 'Follow Sh\u0101fi\u02bf\u012b ruling (don\u2019t deduct debts)',
+    shafiiNote: 'Default is Hanaf\u012b/M\u0101lik\u012b/Hanbal\u012b \u2014 debts reduce zakatable wealth. Check to use the Sh\u0101fi\u02bf\u012b position.',
     debtIgnoredNote: 'Debt field ignored. Zakat calculated on full net wealth before debt.',
     // Rate status
     fetchingRate: 'Fetching live rate...',
     rateAutoFilled: 'Auto-filled from {{source}} ({{date}})',
     rateAutoFilledNoDate: 'Auto-filled from {{source}}',
     rateUnavailable: 'Live rate unavailable. Enter price manually.',
+    rateUnavailableAction: 'Tap Retry or enter the rate manually above.',
+    retryRate: 'Retry',
     enterRate: 'Enter the current local rate per {{unit}}.',
+    // Methodology hints
+    ghamidiHint: 'Scroll down for Ghamidi-specific fields (agricultural produce, rental income).',
+    contemporaryHint: 'Scroll down for Contemporary fields (professional income, business inventory).',
+    // Empty state
+    enterAssetFirst: 'Enter at least one asset to calculate.',
     // Buttons
     calculateZakat: 'Calculate Zakat',
     aboutDisclaimer: 'About & Disclaimer',

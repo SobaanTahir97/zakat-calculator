@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState, ReactNode } from 'react';
 import { fetchMetalRate, type Currency, type RateStatus } from '../lib/goldRate';
 import type { WeightUnit, IrrigationType, Methodology } from '../lib/calculate';
 
@@ -35,9 +35,51 @@ export interface FormState {
 interface FormContextType {
   form: FormState;
   updateField: <K extends keyof FormState>(field: K, value: FormState[K]) => void;
+  refreshMetalRates: () => void;
 }
 
 const FormContext = createContext<FormContextType | undefined>(undefined);
+
+async function loadRates(
+  currency: Currency,
+  setForm: React.Dispatch<React.SetStateAction<FormState>>,
+  shouldApply: () => boolean,
+) {
+  setForm((prev) => ({
+    ...prev,
+    goldRateStatus: 'loading',
+    goldPricePerUnit: '',
+    silverRateStatus: 'loading',
+    silverPricePerUnit: '',
+  }));
+
+  const [goldResult, silverResult] = await Promise.allSettled([
+    fetchMetalRate('XAU', { currency, forceRefresh: true }),
+    fetchMetalRate('XAG', { currency, forceRefresh: true }),
+  ]);
+
+  if (!shouldApply()) return;
+
+  setForm((prev) => ({
+    ...prev,
+    ...(goldResult.status === 'fulfilled'
+      ? {
+          goldPricePerUnit: prev.goldPricePerUnit || String(goldResult.value.pricePerGram24k),
+          goldRateStatus: 'ready' as const,
+          goldRateSource: goldResult.value.sourceLabel,
+          goldRateUpdatedAt: goldResult.value.asOf,
+        }
+      : { goldRateStatus: 'error' as const, goldRateSource: undefined, goldRateUpdatedAt: undefined }),
+    ...(silverResult.status === 'fulfilled'
+      ? {
+          silverPricePerUnit: prev.silverPricePerUnit || String(silverResult.value.pricePerGram24k),
+          silverRateStatus: 'ready' as const,
+          silverRateSource: silverResult.value.sourceLabel,
+          silverRateUpdatedAt: silverResult.value.asOf,
+        }
+      : { silverRateStatus: 'error' as const, silverRateSource: undefined, silverRateUpdatedAt: undefined }),
+  }));
+}
 
 export const FormProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [form, setForm] = useState<FormState>({
@@ -67,59 +109,27 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     silverRateUpdatedAt: undefined,
   });
 
-  // Fetch gold & silver rates in parallel on mount and when currency changes
   useEffect(() => {
-    let isCancelled = false;
-
-    const loadRates = async () => {
-      setForm((prev) => ({
-        ...prev,
-        goldRateStatus: 'loading',
-        goldPricePerUnit: '',
-        silverRateStatus: 'loading',
-        silverPricePerUnit: '',
-      }));
-
-      const [goldResult, silverResult] = await Promise.allSettled([
-        fetchMetalRate('XAU', { currency: form.currency, forceRefresh: true }),
-        fetchMetalRate('XAG', { currency: form.currency, forceRefresh: true }),
-      ]);
-
-      if (isCancelled) return;
-
-      setForm((prev) => ({
-        ...prev,
-        ...(goldResult.status === 'fulfilled'
-          ? {
-              goldPricePerUnit: prev.goldPricePerUnit || String(goldResult.value.pricePerGram24k),
-              goldRateStatus: 'ready' as const,
-              goldRateSource: goldResult.value.sourceLabel,
-              goldRateUpdatedAt: goldResult.value.asOf,
-            }
-          : { goldRateStatus: 'error' as const, goldRateSource: undefined, goldRateUpdatedAt: undefined }),
-        ...(silverResult.status === 'fulfilled'
-          ? {
-              silverPricePerUnit: prev.silverPricePerUnit || String(silverResult.value.pricePerGram24k),
-              silverRateStatus: 'ready' as const,
-              silverRateSource: silverResult.value.sourceLabel,
-              silverRateUpdatedAt: silverResult.value.asOf,
-            }
-          : { silverRateStatus: 'error' as const, silverRateSource: undefined, silverRateUpdatedAt: undefined }),
-      }));
-    };
-
-    loadRates();
-
+    let cancelled = false;
+    loadRates(form.currency, setForm, () => !cancelled);
     return () => {
-      isCancelled = true;
+      cancelled = true;
     };
+  }, [form.currency]);
+
+  const refreshMetalRates = useCallback(() => {
+    loadRates(form.currency, setForm, () => true);
   }, [form.currency]);
 
   const updateField = <K extends keyof FormState>(field: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  return <FormContext.Provider value={{ form, updateField }}>{children}</FormContext.Provider>;
+  return (
+    <FormContext.Provider value={{ form, updateField, refreshMetalRates }}>
+      {children}
+    </FormContext.Provider>
+  );
 };
 
 export const useForm = () => {

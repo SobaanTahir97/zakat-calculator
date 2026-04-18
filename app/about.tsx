@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, Pressable } from 'react-native';
+import Constants from 'expo-constants';
 import { colors, spacing, typography, borderRadius } from '../constants/theme';
 import DisclaimerModal from '../components/DisclaimerModal';
 import InlineReferenceLink from '../components/InlineReferenceLink';
 import { useLanguage } from '../context/LanguageContext';
+import { tabletContainerStyle } from '../lib/responsive';
 
 export default function AboutScreen() {
   const [disclaimerVisible, setDisclaimerVisible] = useState(false);
@@ -14,6 +16,7 @@ export default function AboutScreen() {
     <>
       <DisclaimerModal visible={disclaimerVisible} onDismiss={() => setDisclaimerVisible(false)} />
       <ScrollView style={styles.container}>
+        <View style={tabletContainerStyle}>
         <Text style={[styles.title, textDir]}>{t('about.title')}</Text>
 
         <View style={styles.section}>
@@ -45,13 +48,14 @@ export default function AboutScreen() {
 
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, textDir]}>{t('about.version')}</Text>
-          <Text style={styles.sectionText}>v1.1.0</Text>
+          <Text style={styles.sectionText}>v{Constants.expoConfig?.version ?? '1.0.0'}</Text>
         </View>
 
         <View style={styles.buttonContainer}>
           <Pressable style={styles.disclaimerButton} onPress={() => setDisclaimerVisible(true)}>
             <Text style={styles.disclaimerButtonText}>{t('about.viewDisclaimer')}</Text>
           </Pressable>
+        </View>
         </View>
       </ScrollView>
     </>

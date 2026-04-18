@@ -18,7 +18,7 @@ interface AnimatedSplashProps {
 
 export default function AnimatedSplash({ onFinish, onReady }: AnimatedSplashProps) {
   const { width } = useWindowDimensions();
-  const logoSize = width * 0.35;
+  const logoSize = Math.min(width * 0.35, 240);
   const readyFired = useRef(false);
 
   const logoScale = useSharedValue(1);
