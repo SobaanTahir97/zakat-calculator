@@ -1,6 +1,7 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
 import 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,6 +9,7 @@ import { FormProvider } from '../context/FormContext';
 import { LanguageProvider, useLanguage } from '../context/LanguageContext';
 import DisclaimerModal from '../components/DisclaimerModal';
 import AnimatedSplash from '../components/AnimatedSplash';
+import { colors, typography } from '../constants/theme';
 
 export {
   ErrorBoundary,
@@ -20,7 +22,13 @@ const DISCLAIMER_SEEN_KEY = 'zakat_disclaimer_seen';
 function AppStack() {
   const { t } = useLanguage();
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        headerStyle: { backgroundColor: colors.primary.main },
+        headerTintColor: colors.text.light,
+        headerTitleStyle: { fontWeight: typography.fontWeight.semibold },
+      }}
+    >
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="results" options={{ title: t('nav.zakatDue') }} />
       <Stack.Screen name="reference/[id]" options={{ title: t('nav.reference') }} />
@@ -106,6 +114,7 @@ function LayoutInner({
 
   return (
     <FormProvider>
+      <StatusBar style="light" translucent backgroundColor="transparent" />
       <DisclaimerModal visible={disclaimerVisible} onDismiss={onDisclaimerDismiss} />
       <AppStack />
       {showAnimatedSplash && <AnimatedSplash onFinish={handleAnimatedSplashFinish} onReady={handleSplashReady} />}
